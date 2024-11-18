@@ -1,7 +1,7 @@
 import { numeric, pgTable, primaryKey, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 
-export const place = pgTable("place", {
+export const places = pgTable("places", {
     longtitude: numeric("longtitude", { precision: 4 }).notNull(),
     latitude: numeric("latitude", { precision: 4 }).notNull(),
     address: varchar("address").notNull().notNull(),
@@ -13,4 +13,4 @@ export const place = pgTable("place", {
     }),
 ])
 
-export const insertPlaceSchema = createInsertSchema(place);
+export const insertPlaceSchema = createInsertSchema(places);

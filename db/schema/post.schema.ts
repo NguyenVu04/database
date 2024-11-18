@@ -9,8 +9,8 @@ export type contentType = {
 
 export const posts = pgTable("posts", {
     id: uuid("id").defaultRandom(),
-    visitor: uuid("visitor").notNull().references(() => visitors.id),
-    post_date: date("post_date", {mode: "date"}).notNull(),
+    visitor: uuid("visitor").notNull().references(() => visitors.id, {onDelete: "cascade"}),
+    post_date: date("post_date", {mode: "date"}).notNull().defaultNow(),
     content: json("content").notNull(),
 }, (t) => [
     primaryKey({
