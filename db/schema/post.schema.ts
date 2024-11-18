@@ -8,7 +8,7 @@ export type contentType = {
 }
 
 export const posts = pgTable("posts", {
-    id: uuid("id").defaultRandom(),
+    id: uuid("id").defaultRandom().notNull(),
     visitor: uuid("visitor").notNull().references(() => visitors.id, {onDelete: "cascade"}),
     post_date: date("post_date", {mode: "date"}).notNull().defaultNow(),
     content: json("content").notNull(),
@@ -20,8 +20,6 @@ export const posts = pgTable("posts", {
 ]);
 
 export const inserPostSchema = createInsertSchema(posts, {
-    visitor: z.string().uuid(),
-    post_date: z.date(),
     content: z.object({
         content: z.string().max(200),
         mediaUrl: z.array(z.string()) || undefined || null

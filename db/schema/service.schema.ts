@@ -3,8 +3,8 @@ import { service_providers } from "./serviceprovider.schema";
 import { createInsertSchema } from "drizzle-zod";
 
 export const services = pgTable("services", {
-    longtitude: numeric("longtitude", { precision: 4 }),
-    latitude: numeric("latitude", { precision: 4 }),
+    longtitude: numeric("longtitude", { precision: 4 }).notNull(),
+    latitude: numeric("latitude", { precision: 4 }).notNull(),
     name: varchar("name").notNull(),
     provider: uuid("provider").notNull().references(() => service_providers.id, {onDelete: "cascade"}),
 }, (t) => [
