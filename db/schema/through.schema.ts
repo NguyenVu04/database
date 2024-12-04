@@ -29,6 +29,7 @@ export const through = pgTable("through", {
     check("hour_check", sql`${t.arrived_hour} <= ${t.departured_hour}`),
     check("valid_arrived_hour_check", sql`${t.arrived_hour} between 0 and 23`),
     check("valid_departured_hour_check", sql`${t.departured_hour} between 0 and 23`),
+    check("arrived_before_departured_check", sql`(${t.arrived_date} < ${t.departured_date}) OR (${t.arrived_date} = ${t.departured_date} AND ${t.arrived_hour} < ${t.departured_hour})`),
 ])
 
 export const insertThroughSchema = createInsertSchema(through, {
