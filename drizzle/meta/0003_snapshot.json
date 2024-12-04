@@ -1,5 +1,5 @@
 {
-  "id": "7ad9e47c-4124-4b44-b04e-380e82920405",
+  "id": "8b651dce-829d-46de-b4b2-7c2cf54ac5e9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -244,8 +244,8 @@
       "name": "booked",
       "schema": "",
       "columns": {
-        "tourguide": {
-          "name": "tourguide",
+        "tour_guide": {
+          "name": "tour_guide",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -283,12 +283,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "booked_tourguide_tour_guide_id_fk": {
-          "name": "booked_tourguide_tour_guide_id_fk",
+        "booked_tour_guide_tour_guide_id_fk": {
+          "name": "booked_tour_guide_tour_guide_id_fk",
           "tableFrom": "booked",
           "tableTo": "tour_guide",
           "columnsFrom": [
-            "tourguide"
+            "tour_guide"
           ],
           "columnsTo": [
             "id"
@@ -314,7 +314,7 @@
         "booked_pkey": {
           "name": "booked_pkey",
           "columns": [
-            "tourguide",
+            "tour_guide",
             "visitor"
           ]
         }

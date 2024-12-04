@@ -28,13 +28,13 @@ CREATE TABLE IF NOT EXISTS "belongs" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "booked" (
-	"tourguide" uuid NOT NULL,
+	"tour_guide" uuid NOT NULL,
 	"visitor" uuid NOT NULL,
 	"comment" varchar(100),
 	"start_date" date NOT NULL,
 	"end_date" date NOT NULL,
 	"rating" smallint NOT NULL,
-	CONSTRAINT "booked_pkey" PRIMARY KEY("tourguide","visitor")
+	CONSTRAINT "booked_pkey" PRIMARY KEY("tour_guide","visitor")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "comments" (
@@ -285,7 +285,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "booked" ADD CONSTRAINT "booked_tourguide_tour_guide_id_fk" FOREIGN KEY ("tourguide") REFERENCES "public"."tour_guide"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "booked" ADD CONSTRAINT "booked_tour_guide_tour_guide_id_fk" FOREIGN KEY ("tour_guide") REFERENCES "public"."tour_guide"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

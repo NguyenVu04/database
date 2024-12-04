@@ -5,7 +5,7 @@ import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 
 export const booked = pgTable("booked", {
-    tourguide: uuid("tourguide").notNull().references(() => tour_guide.id, {onDelete: "cascade"}),
+    tourguide: uuid("tour_guide").notNull().references(() => tour_guide.id, {onDelete: "cascade"}),
     visitor: uuid("visitor").notNull().references(() => tour_guide.id, {onDelete: "cascade"}),
     comment: varchar("comment", {length: 100}),
     start_date: date("start_date", {mode: "date"}).notNull(),
