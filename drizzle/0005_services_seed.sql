@@ -12,6 +12,18 @@ INSERT INTO hotels (longtitude, latitude)
            (101.3350, 15.8794),
            (102.0734, 20.9505);
 
+INSERT INTO hotel_rooms (longtitude, latitude, room_type, room_price)
+    VALUES (103.0734, 20.9505, 'Single', 100),
+           (106.4419, 11.9465, 'Double', 150),
+           (101.3350, 15.8794, 'Single', 100),
+           (102.0734, 20.9505, 'Double', 150);
+
+INSERT INTO room_devices (longtitude, latitude, room_type, room_price, device_name, device_quantity)
+    VALUES (103.0734, 20.9505, 'Single', 100, 'TV', 1),
+           (106.4419, 11.9465, 'Double', 150, 'Refrigerator', 1),
+           (101.3350, 15.8794, 'Single', 100, 'Air Conditioner', 1),
+           (102.0734, 20.9505, 'Double', 150, 'Bed', 2);
+
 INSERT INTO restaurants (longtitude, latitude)
     VALUES (103.0734, 20.9505),
            (106.4419, 11.9465),
