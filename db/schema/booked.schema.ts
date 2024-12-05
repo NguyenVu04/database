@@ -3,10 +3,11 @@ import { tour_guide } from "./tourguide.schema";
 import { check } from "drizzle-orm/mysql-core";
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
+import { visitors } from "./visitor.schema";
 
 export const booked = pgTable("booked", {
     tourguide: uuid("tour_guide").notNull().references(() => tour_guide.id, {onDelete: "cascade"}),
-    visitor: uuid("visitor").notNull().references(() => tour_guide.id, {onDelete: "cascade"}),
+    visitor: uuid("visitor").notNull().references(() => visitors.id, {onDelete: "cascade"}),
     comment: varchar("comment", {length: 100}),
     start_date: date("start_date", {mode: "date"}).notNull(),
     end_date: date("end_date", {mode: "date"}).notNull(),

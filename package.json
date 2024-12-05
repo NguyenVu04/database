@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "dbi": "npx drizzle-kit push && npx tsx --env-file=.env ./db/seeding.ts"
+    "dbi": "npx drizzle-kit migrate"
   },
   "dependencies": {
     "database": "file:",

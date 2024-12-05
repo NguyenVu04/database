@@ -28,8 +28,8 @@ INSERT INTO users (email, name, date_of_birth, password, gender)
            ('zTt23w@example.com', 'Bob Smith', '2002-01-01', 'password', 'male'),
            ('zTt24w@example.com', 'Bob Smith', '2002-01-01', 'password', 'male');
 
-INSERT INTO phone_numbers (user, phone_number)
-    VALUE ((SELECT id FROM users WHERE email = 'wv4tG@example.com'), '1234567890'),
+INSERT INTO phone_numbers ("user", phone_number)
+    VALUES ((SELECT id FROM users WHERE email = 'wv4tG@example.com'), '1234567890'),
            ((SELECT id FROM users WHERE email = 'VYs7D@example.com'), '1234567891'),
            ((SELECT id FROM users WHERE email = 'zTt0w@example.com'), '1234567892'),
            ((SELECT id FROM users WHERE email = 'zTt1w@example.com'), '1234567893'),
@@ -58,7 +58,7 @@ INSERT INTO phone_numbers (user, phone_number)
            ((SELECT id FROM users WHERE email = 'zTt23w@example.com'), '1234567816'),
            ((SELECT id FROM users WHERE email = 'zTt24w@example.com'), '1234567817');
 
-INSERT INTO visitors 
+INSERT INTO visitors (id)
     VALUES ((SELECT id FROM users WHERE email = 'laughingjack750@gmail.com')),
            ((SELECT id FROM users WHERE email = 'zTt3w@example.com')),
            ((SELECT id FROM users WHERE email = 'zTt2w@example.com')),
@@ -72,23 +72,32 @@ INSERT INTO visitors
            ((SELECT id FROM users WHERE email = 'zTt23w@example.com')),
            ((SELECT id FROM users WHERE email = 'zTt24w@example.com'));
 
-INSERT INTO journalists 
+INSERT INTO journalists (id, date_of_employment)
     VALUES ((SELECT id FROM users WHERE email = 'zTt0w@example.com'), '2022-01-01'),
            ((SELECT id FROM users WHERE email = 'zTt4w@example.com'), '2022-01-01'),
            ((SELECT id FROM users WHERE email = 'zTt5w@example.com'), '2022-01-01'),
            ((SELECT id FROM users WHERE email = 'zTt6w@example.com'), '2022-01-01');
 
-INSERT INTO tour_guide
+INSERT INTO tour_guide (id)
     VALUES ((SELECT id FROM users WHERE email = 'zTt7w@example.com')),
            ((SELECT id FROM users WHERE email = 'zTt8w@example.com')),
            ((SELECT id FROM users WHERE email = 'zTt9w@example.com')),
            ((SELECT id FROM users WHERE email = 'zTt10w@example.com'));
 
-INSERT INTO service_providers
+INSERT INTO booked (visitor, tour_guide, comment, start_date, end_date, rating)
+    VALUES  ((SELECT id FROM users WHERE email = 'zTt3w@example.com'), (SELECT id FROM users WHERE email = 'zTt8w@example.com'), 'This is a comment', '2022-01-01', '2022-01-02', 5),
+            ((SELECT id FROM users WHERE email = 'zTt2w@example.com'), (SELECT id FROM users WHERE email = 'zTt9w@example.com'), 'This is a comment', '2022-01-01', '2022-01-02', 5),
+            ((SELECT id FROM users WHERE email = 'zTt1w@example.com'), (SELECT id FROM users WHERE email = 'zTt10w@example.com'), 'This is a comment', '2022-01-01', '2022-01-02', 5);
+
+INSERT INTO service_providers (id)
     VALUES ((SELECT id FROM users WHERE email = 'zTt11w@example.com')),
            ((SELECT id FROM users WHERE email = 'zTt12w@example.com')),
            ((SELECT id FROM users WHERE email = 'zTt13w@example.com')),
            ((SELECT id FROM users WHERE email = 'zTt14w@example.com')),
            ((SELECT id FROM users WHERE email = 'zTt15w@example.com')),
-           ((SELECT id FROM users WHERE email = 'zTt16w@example.com'));
+           ((SELECT id FROM users WHERE email = 'zTt16w@example.com'));       
 
+INSERT INTO warn (admin_id, "user", content)
+    VALUES (1, (SELECT id FROM users WHERE email = 'zTt1w@example.com'), 'This is a warning'),
+           (1, (SELECT id FROM users WHERE email = 'zTt2w@example.com'), 'This is a warning'),
+           (3, (SELECT id FROM users WHERE email = 'zTt3w@example.com'), 'This is a warning');    

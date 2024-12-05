@@ -60,6 +60,20 @@ CREATE TABLE IF NOT EXISTS "convinience_stores" (
 	CONSTRAINT "convinience_store_pkey" PRIMARY KEY("longtitude","latitude")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "fuel" (
+	"longtitude" numeric(4) NOT NULL,
+	"latitude" numeric(4) NOT NULL,
+	"fuel_price" numeric NOT NULL,
+	"fuel_type" varchar NOT NULL,
+	CONSTRAINT "fuel_pkey" PRIMARY KEY("longtitude","latitude","fuel_price","fuel_type")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "fuel_station" (
+	"longtitude" numeric(4) NOT NULL,
+	"latitude" numeric(4) NOT NULL,
+	CONSTRAINT "fuel_station_pkey" PRIMARY KEY("longtitude","latitude")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "hashtags" (
 	"name" varchar(64) PRIMARY KEY NOT NULL
 );
@@ -291,7 +305,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "booked" ADD CONSTRAINT "booked_visitor_tour_guide_id_fk" FOREIGN KEY ("visitor") REFERENCES "public"."tour_guide"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "booked" ADD CONSTRAINT "booked_visitor_visitors_id_fk" FOREIGN KEY ("visitor") REFERENCES "public"."visitors"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -316,6 +330,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "convinience_stores" ADD CONSTRAINT "convinience_store_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "fuel" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."fuel_station"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "fuel_station" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
