@@ -1,9 +1,10 @@
+'use server';
 import db from "@/db/db";
 import { Admin, admins } from "@/db/schema/admin.schema";
 import { and, eq, getTableColumns, sql } from "drizzle-orm";
 
 class AdminDao {
-    constructor() {}
+    constructor() { }
 
     async findAdmin(id: string): Promise<Omit<Admin, "password"> | null> {
         const adminPrefix = process.env.ADMIN_PREFIX ?? "ADMIN";
@@ -11,7 +12,7 @@ class AdminDao {
         const adminNo = Number(id.replace(adminPrefix, ""));
 
         /* eslint-disable @typescript-eslint/no-unused-vars */
-        const {password, ...adminInfo} = getTableColumns(admins);
+        const { password, ...adminInfo } = getTableColumns(admins);
 
         const result = await db.select({
             ...adminInfo
@@ -27,16 +28,19 @@ class AdminDao {
         return result[0];
     }
 
-    async findAllAdmins(): Promise<Omit<Admin, "password">[]> {
+    async findAllAdmins(): Promise<{ id: string }[]> {
         /* eslint-disable @typescript-eslint/no-unused-vars */
-        const {password, ...adminInfo} = getTableColumns(admins);
+        const { password, ...adminInfo } = getTableColumns(admins);
 
         const result = await db.select({
             ...adminInfo
         })
             .from(admins);
 
-        return result;
+        return result.map(
+            (admin) => ({
+                id: `${process.env.ADMIN_PREFIX ?? "ADMIN"}${admin.id.toFixed(0).padStart(5, "0")}`
+            }));
     }
 
     async deleteById(id: string): Promise<void> {
@@ -67,7 +71,7 @@ class AdminDao {
 
         const adminNo = Number(id.replace(adminPrefix, ""));
 
-        const result = await db.select({password: admins.password})
+        const result = await db.select({ password: admins.password })
             .from(admins)
             .where(and(eq(admins.id, adminNo), eq(admins.password, sql`crypt(${password}, ${admins.password})`)))
             .limit(1);
@@ -77,7 +81,7 @@ class AdminDao {
         }
 
         return id;
-    } 
+    }
 }
 
 export const adminDao = new AdminDao();

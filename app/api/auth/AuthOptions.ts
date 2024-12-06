@@ -1,6 +1,6 @@
 import { adminDao } from "@/lib/dao/AdminDao";
 import { userDao } from "@/lib/dao/UserDao";
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const options: NextAuthOptions = {
@@ -8,19 +8,21 @@ export const options: NextAuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                username: {
-                    label: "Username",
+                email: {
+                    label: "username",
                     type: "text"
                 },
                 password: {
-                    label: "Password",
+                    label: "password",
                     type: "password"
-                },
+                }, 
                 role: {
                     label: "Role",
                     type: "text"
                 }
             },
+
+                                    
             async authorize(credentials) {
                 if (!credentials) {
                     return null;
@@ -29,7 +31,7 @@ export const options: NextAuthOptions = {
                 switch (credentials.role) {
                     case "admin":
 
-                        const adminId = await adminDao.authenticate(credentials.username,
+                        const adminId = await adminDao.authenticate(credentials.email,
                             credentials.password);
 
                         if (!adminId) {
@@ -37,12 +39,12 @@ export const options: NextAuthOptions = {
                         }
 
                         return {
-                            id: adminId
-                        }
+                            email: adminId,
+                        } as User
 
                     case "user":
 
-                        const userId = await userDao.authenticate(credentials.username,
+                        const userId = await userDao.authenticate(credentials.email,
                             credentials.password);
 
                         if (!userId) {
@@ -50,13 +52,18 @@ export const options: NextAuthOptions = {
                         }
 
                         return {
-                            id: userId
-                        }
+                            email: userId,
+                        } as User
 
                     default:
                         return null;
                 }
             }
         })
-    ]
+    ],
+
+    pages: {
+        signIn: "/signin",
+        signOut: "/signout"
+    }
 };

@@ -1,3 +1,4 @@
+'use server';
 import db from "@/db/db";
 import { users } from "@/db/schema/user.schema";
 import { and, eq, getTableColumns, sql } from "drizzle-orm";
