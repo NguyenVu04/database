@@ -1,15 +1,15 @@
 'use server';
 import { getServerSession } from "next-auth";
-import { options } from "./AuthOptions";
 import { redirect } from "next/navigation";
 import { adminDao } from "@/lib/dao/AdminDao";
 import { userDao } from "@/lib/dao/UserDao";
+import { options } from "./authoptions";
 
 export default async function loginIsRequired(
-    roleRequired?: "admin" | "user"):
+    roleRequired?: "admin" | "visitor" | "journalist" | "service_provider" | "tour_guide"):
     Promise<{
         id: string | number,
-        type: "admin" | "visitor" | "journalist" | "service_provider" | "tour_guide"
+        role: "admin" | "visitor" | "journalist" | "service_provider" | "tour_guide"
     } | null> {
 
     const session = await getServerSession(options);
@@ -30,11 +30,14 @@ export default async function loginIsRequired(
 
             return {
                 id: admin.id,
-                type: "admin"
+                role: "admin"
             }
         }
-        case "user": {
-            const user = await userDao.findIdByEmail(session?.user?.email);
+        case "visitor": 
+        case "journalist":
+        case "service_provider":
+        case "tour_guide": {
+            const user = await userDao.findCredentials(session?.user?.email, roleRequired);
 
             if (!user) {
                 redirect("/signin");
@@ -42,7 +45,7 @@ export default async function loginIsRequired(
 
             return {
                 id: user,
-                type: "visitor"//TODO: add role
+                role: roleRequired
             }
         }
     }

@@ -4,23 +4,70 @@ import { users } from "@/db/schema/user.schema";
 import { and, eq, getTableColumns, sql } from "drizzle-orm";
 import { User } from "@/db/schema/user.schema";
 import { phone_numbers } from "@/db/schema/phonenumber.schema";
+import { visitors } from "@/db/schema/visitor.schema";
+import { journalists } from "@/db/schema/journalist.schema";
+import { service_providers } from "@/db/schema/serviceprovider.schema";
+import { tour_guide } from "@/db/schema/tourguide.schema";
 
 class UserDao {
     constructor() { }
 
-    async findIdByEmail(email: string): Promise<string | null> {
-        const result = await db.select({
-            id: users.id
-        })
+    async findCredentials(email: string, role: "visitor" | "journalist" | "service_provider" | "tour_guide"): Promise<string | null> {
+        const user = db.select({ id: users.id })
             .from(users)
             .where(eq(users.email, email))
-            .limit(1);
+            .limit(1)
+            .as("user");
+        
+        switch (role) {
+            case "visitor": {
+                const visitor = await db.select()
+                    .from(visitors)
+                    .where(eq(visitors.id, user.id));
 
-        if (result.length === 0) {
-            return null;
+                if (visitor.length === 0) {
+                    return null;
+                }
+
+                return visitor[0].id;
+            }
+
+            case "journalist": {
+                const journalist = await db.select()
+                    .from(journalists)
+                    .where(eq(journalists.id, user.id));
+
+                if (journalist.length === 0) {
+                    return null;
+                }
+
+                return journalist[0].id;
+            }
+
+            case "service_provider": {
+                const serviceProvider = await db.select()
+                    .from(service_providers)
+                    .where(eq(service_providers.id, user.id));
+
+                if (serviceProvider.length === 0) {
+                    return null;
+                }
+
+                return serviceProvider[0].id;
+            }
+
+            case "tour_guide": {
+                const tourGuide = await db.select()
+                    .from(tour_guide)
+                    .where(eq(tour_guide.id, user.id));
+
+                if (tourGuide.length === 0) {
+                    return null;
+                }
+
+                return tourGuide[0].id;
+            }
         }
-
-        return result[0].id;
     }
 
     async findPhoneNumbersById(id: string): Promise<string[]> {

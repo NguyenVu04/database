@@ -5,50 +5,57 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1733419446400,
-      "tag": "0000_military_iceman",
+      "when": 1733503233937,
+      "tag": "0000_famous_squirrel_girl",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1733296718877,
-      "tag": "0001_admins_seed",
+      "when": 1733503311582,
+      "tag": "0001_trigger",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
-      "when": 1733296956821,
-      "tag": "0002_users_seed",
+      "when": 1733503328972,
+      "tag": "0002_admins_seed",
       "breakpoints": true
     },
     {
       "idx": 3,
       "version": "7",
-      "when": 1733384531422,
-      "tag": "0003_places_seed",
+      "when": 1733503342242,
+      "tag": "0003_users_seed",
       "breakpoints": true
     },
     {
       "idx": 4,
       "version": "7",
-      "when": 1733385385496,
-      "tag": "0004_posts_seed",
+      "when": 1733503349972,
+      "tag": "0004_places_seed",
       "breakpoints": true
     },
     {
       "idx": 5,
       "version": "7",
-      "when": 1733385587107,
-      "tag": "0005_services_seed",
+      "when": 1733503356582,
+      "tag": "0005_posts_seed",
       "breakpoints": true
     },
     {
       "idx": 6,
       "version": "7",
-      "when": 1733388818537,
-      "tag": "0006_trips_seed",
+      "when": 1733503364077,
+      "tag": "0006_services_seed",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1733503371258,
+      "tag": "0007_trips_seed",
       "breakpoints": true
     }
   ]
