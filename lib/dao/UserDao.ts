@@ -1,6 +1,6 @@
 import db from "@/db/db";
 import { users } from "@/db/schema/user.schema";
-import { and, eq, getTableColumns } from "drizzle-orm";
+import { and, eq, getTableColumns, sql } from "drizzle-orm";
 import { User } from "@/db/schema/user.schema";
 import { phone_numbers } from "@/db/schema/phonenumber.schema";
 
@@ -120,16 +120,12 @@ class UserDao {
             password: users.password
         })
             .from(users)
-            .where(and(eq(users.email, email)))
+            .where(and(
+                eq(users.email, email),
+                eq(users.password, sql`crypt(${password}, ${users.password})`)))
             .limit(1);
 
         if (result.length === 0) {
-            return null;
-        }
-
-        const isValidPassword = result[0].password === password;
-        
-        if (!isValidPassword) {
             return null;
         }
 
