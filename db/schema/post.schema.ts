@@ -2,6 +2,7 @@ import { date, json, pgTable, primaryKey, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { visitors } from "./visitor.schema";
+import { InferSelectModel } from "drizzle-orm";
 export type contentType = {
     content: string,
     mediaUrl?: string[]
@@ -18,6 +19,8 @@ export const posts = pgTable("posts", {
         columns: [t.id, t.visitor],
     }),
 ]);
+
+export type Post = InferSelectModel<typeof posts>;
 
 export const inserPostSchema = createInsertSchema(posts, {
     content: z.object({
