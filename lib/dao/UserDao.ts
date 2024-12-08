@@ -1,4 +1,3 @@
-'use server';
 import db from "@/db/db";
 import { users } from "@/db/schema/user.schema";
 import { and, eq, getTableColumns, sql } from "drizzle-orm";
@@ -144,7 +143,7 @@ class UserDao {
             .where(eq(users.id, id));
     }
 
-    async create(data: Omit<User, "id">): Promise<string> {
+    async create(data: Omit<User, "id">, role: "visitor" | "journalist" | "service_provider" | "tour_guide"): Promise<string> {
         const { phone_numbers: phoneNumbers, ...userInfo } = data;
 
         const newUser = await db.insert(users)
@@ -158,6 +157,45 @@ class UserDao {
                         user: newUser[0].id,
                         phone_number: number
                     })));
+
+        switch (role) {
+            case "visitor": {
+                await db.insert(visitors)
+                    .values({
+                        id: newUser[0].id
+                    });
+
+                break;
+            }
+
+            case "journalist": {
+                await db.insert(journalists)
+                    .values({
+                    id: newUser[0].id,
+                    date_of_employment: new Date()
+                });
+
+                break;
+            }
+
+            case "service_provider": {
+                await db.insert(service_providers)
+                    .values({
+                    id: newUser[0].id
+                });
+
+                break;
+            }
+
+            case "tour_guide": {
+                await db.insert(tour_guide)
+                    .values({
+                    id: newUser[0].id
+                });
+
+                break;
+            }
+        }
 
         return newUser[0].id;
     }
