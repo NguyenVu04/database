@@ -1,4 +1,3 @@
-'use server';
 import db from "@/db/db";
 import { Admin, admins } from "@/db/schema/admin.schema";
 import { and, eq, getTableColumns, sql } from "drizzle-orm";

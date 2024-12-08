@@ -7,11 +7,12 @@ import { visitors } from "@/db/schema/visitor.schema";
 import { journalists } from "@/db/schema/journalist.schema";
 import { service_providers } from "@/db/schema/serviceprovider.schema";
 import { tour_guide } from "@/db/schema/tourguide.schema";
+import { UserRole } from "../helper/userrole";
 
 class UserDao {
     constructor() { }
 
-    async findCredentials(email: string, role: "visitor" | "journalist" | "service_provider" | "tour_guide"): Promise<string | null> {
+    async findCredentials(email: string, role: UserRole): Promise<string | null> {
         const user = db.select({ id: users.id })
             .from(users)
             .where(eq(users.email, email))
@@ -20,9 +21,10 @@ class UserDao {
         
         switch (role) {
             case "visitor": {
-                const visitor = await db.select()
+                const visitor = await db.select({id: visitors.id})
                     .from(visitors)
-                    .where(eq(visitors.id, user.id));
+                    .innerJoin(user, eq(visitors.id, user.id))
+                    .limit(1);
 
                 if (visitor.length === 0) {
                     return null;
@@ -32,9 +34,10 @@ class UserDao {
             }
 
             case "journalist": {
-                const journalist = await db.select()
+                const journalist = await db.select({id: journalists.id})
                     .from(journalists)
-                    .where(eq(journalists.id, user.id));
+                    .innerJoin(user, eq(journalists.id, user.id))
+                    .limit(1);
 
                 if (journalist.length === 0) {
                     return null;
@@ -44,9 +47,10 @@ class UserDao {
             }
 
             case "service_provider": {
-                const serviceProvider = await db.select()
+                const serviceProvider = await db.select({id: service_providers.id})
                     .from(service_providers)
-                    .where(eq(service_providers.id, user.id));
+                    .innerJoin(user, eq(service_providers.id, user.id))
+                    .limit(1);
 
                 if (serviceProvider.length === 0) {
                     return null;
@@ -56,15 +60,20 @@ class UserDao {
             }
 
             case "tour_guide": {
-                const tourGuide = await db.select()
+                const tourGuide = await db.select({id: tour_guide.id})
                     .from(tour_guide)
-                    .where(eq(tour_guide.id, user.id));
+                    .innerJoin(user, eq(tour_guide.id, user.id))
+                    .limit(1);
 
                 if (tourGuide.length === 0) {
                     return null;
                 }
 
                 return tourGuide[0].id;
+            }
+
+            default: {
+                return null;
             }
         }
     }
@@ -203,6 +212,7 @@ class UserDao {
     async authenticate(email: string, password: string): Promise<string | null> {
         const result = await db.select({
             id: users.id,
+            email: users.email,
             password: users.password
         })
             .from(users)
@@ -215,7 +225,7 @@ class UserDao {
             return null;
         }
 
-        return result[0].id;
+        return result[0].email;
     }
 }
 

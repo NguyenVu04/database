@@ -9,7 +9,7 @@ export const options: NextAuthOptions = {
             name: "Credentials",
             credentials: {
                 email: {
-                    label: "username",
+                    label: "email",
                     type: "text"
                 },
                 password: {
@@ -17,7 +17,7 @@ export const options: NextAuthOptions = {
                     type: "password"
                 }, 
                 role: {
-                    label: "Role",
+                    label: "role",
                     type: "text"
                 }
             },
@@ -27,7 +27,7 @@ export const options: NextAuthOptions = {
                 if (!credentials) {
                     return null;
                 }
-
+                
                 switch (credentials.role) {
                     case "admin":
 
@@ -43,7 +43,7 @@ export const options: NextAuthOptions = {
                         } as User
 
                     case "user":
-
+                        
                         const userId = await userDao.authenticate(credentials.email,
                             credentials.password);
 
@@ -64,6 +64,5 @@ export const options: NextAuthOptions = {
 
     pages: {
         signIn: "/signin",
-        signOut: "/signout"
     }
 };

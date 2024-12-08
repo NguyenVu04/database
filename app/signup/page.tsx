@@ -1,16 +1,16 @@
 'use client';
 
+import calculateAge from "@/lib/helper/calculateage";
 import signUp from "@/lib/helper/signup";
+import { UserRole } from "@/lib/helper/userrole";
 import { redirect, useSearchParams } from "next/navigation";
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { FaHome } from "react-icons/fa";
 
 function SignupPage() {
-    const roles = ["visitor", "journalist", "service_provider", "tour_guide"];
     const params = useSearchParams();
 
-    if (!params.has("role") ||
-        !roles.includes(params.get("role") as string)) {
+    if (!params.has("role") || UserRole[params.get("role") as keyof typeof UserRole] === undefined) {
         redirect("/");
     }
 
@@ -22,6 +22,8 @@ function SignupPage() {
         gender: "",
         phoneNumbers: [""], // Start with one empty phone number field
     });
+
+    const [error, setError] = useState<string | null>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -44,6 +46,11 @@ function SignupPage() {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (calculateAge(formData.dob) < 18) {
+            setError("You must be at least 18 years old to sign up.");
+            return;
+        }
 
         const id = await signUp(
             params.get("role") as string,
@@ -74,7 +81,12 @@ function SignupPage() {
                 </div>
 
                 {/* Form Section */}
-                <h2 className="text-2xl font-bold text-center mb-6">Signup</h2>
+                <h2 className="text-2xl font-bold text-center mb-6">SIGN UP</h2>
+                {
+                    error && (
+                        <p className="text-red-500 mb-4">{error}</p>
+                    )
+                }
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Other fields */}
                     <div>
@@ -185,7 +197,7 @@ function SignupPage() {
                         type="submit"
                         className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
                     >
-                        Signup
+                        Sign up
                     </button>
                 </form>
             </div>

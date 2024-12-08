@@ -4,16 +4,17 @@ import { redirect } from "next/navigation";
 import { adminDao } from "@/lib/dao/AdminDao";
 import { userDao } from "@/lib/dao/UserDao";
 import { options } from "./authoptions";
+import { UserRole } from "@/lib/helper/userrole";
 
 export default async function loginIsRequired(
-    roleRequired?: "admin" | "visitor" | "journalist" | "service_provider" | "tour_guide"):
+    roleRequired?: UserRole | "admin"):
     Promise<{
         id: string | number,
-        role: "admin" | "visitor" | "journalist" | "service_provider" | "tour_guide"
+        role: UserRole | "admin"
     } | null> {
 
     const session = await getServerSession(options);
-
+    
     if ((!session || !session.user || !session.user.email) && roleRequired) {
         redirect("/signin");
     } else if (!session || !session.user || !session.user.email) {
