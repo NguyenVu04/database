@@ -54,9 +54,8 @@ const HomePage = () => {
 
     // Close the menu if the user clicks outside of it
     const handleClickOutside = (event: MouseEvent) => {
-        if (menuRef.current && !menuRef.current.contains(event.target as Node) && menuRef.current.getAttribute("display") === "block") {
+        if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
             setMenuVisible(false);
-            menuRef.current.setAttribute("display", "none");
         }
     };
 
@@ -123,9 +122,9 @@ const HomePage = () => {
                 {posts.map((post) => (
                     <div key={post.id} className="mb-8 border-b pb-6 relative">
                         <div className="absolute top-2 right-2 cursor-pointer" onClick={(e) => {
-                                    e.stopPropagation(); // Prevent event from propagating
+                                    e.nativeEvent.stopImmediatePropagation();
                                     setSelectedPostId(post.id);
-                                    setMenuVisible(true); // Show the menu
+                                    setMenuVisible((menuVisible) => !menuVisible); // Show the menu
                                 }}>
                             <FaEllipsisV size={20}/>
                         </div>
@@ -134,7 +133,7 @@ const HomePage = () => {
                         {(selectedPostId === post.id && menuVisible) && (
                             <div
                                 ref={menuRef}
-                                className={`absolute top-8 right-2 bg-white shadow-lg rounded-lg w-40 ${menuVisible ? "block" : "hidden"}`}
+                                className="absolute top-8 right-2 bg-white shadow-lg rounded-lg w-40"
                             >
                                 <ul className="space-y-2 text-sm">
                                     <li
