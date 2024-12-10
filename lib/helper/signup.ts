@@ -1,9 +1,10 @@
 'use server';
 
 import { userDao } from "../dao/UserDao";
+import { UserRole } from "./userrole";
 
 export default async function signUp(
-    role: string,
+    role: UserRole,
     email: string,
     username: string,
     password: string,
@@ -18,6 +19,6 @@ export default async function signUp(
         date_of_birth: new Date(dob),
         gender: gender as "male" | "female",
         phone_numbers: phoneNumbers,
-    }, role as "visitor" | "journalist" | "service_provider" | "tour_guide");
+    }, role);
     return id;
 }

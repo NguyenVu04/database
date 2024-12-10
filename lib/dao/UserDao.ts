@@ -8,74 +8,17 @@ import { journalists } from "@/db/schema/journalist.schema";
 import { service_providers } from "@/db/schema/serviceprovider.schema";
 import { tour_guide } from "@/db/schema/tourguide.schema";
 import { UserRole } from "../helper/userrole";
+import { reports } from "@/db/schema/report.schema";
 
 class UserDao {
     constructor() { }
 
     async findCredentials(email: string, role: UserRole): Promise<string | null> {
-        const user = db.select({ id: users.id })
-            .from(users)
-            .where(eq(users.email, email))
-            .limit(1)
-            .as("user");
-        
-        switch (role) {
-            case "visitor": {
-                const visitor = await db.select({id: visitors.id})
-                    .from(visitors)
-                    .innerJoin(user, eq(visitors.id, user.id))
-                    .limit(1);
-
-                if (visitor.length === 0) {
-                    return null;
-                }
-
-                return visitor[0].id;
-            }
-
-            case "journalist": {
-                const journalist = await db.select({id: journalists.id})
-                    .from(journalists)
-                    .innerJoin(user, eq(journalists.id, user.id))
-                    .limit(1);
-
-                if (journalist.length === 0) {
-                    return null;
-                }
-
-                return journalist[0].id;
-            }
-
-            case "service_provider": {
-                const serviceProvider = await db.select({id: service_providers.id})
-                    .from(service_providers)
-                    .innerJoin(user, eq(service_providers.id, user.id))
-                    .limit(1);
-
-                if (serviceProvider.length === 0) {
-                    return null;
-                }
-
-                return serviceProvider[0].id;
-            }
-
-            case "tour_guide": {
-                const tourGuide = await db.select({id: tour_guide.id})
-                    .from(tour_guide)
-                    .innerJoin(user, eq(tour_guide.id, user.id))
-                    .limit(1);
-
-                if (tourGuide.length === 0) {
-                    return null;
-                }
-
-                return tourGuide[0].id;
-            }
-
-            default: {
-                return null;
-            }
+        const user = await db.execute(sql`SELECT find_user_credentials(${email}, ${role}) AS user_id;`);
+        if (user.rowCount === 0) {
+            return null;
         }
+        return user.rows[0].user_id as string;
     }
 
     async findPhoneNumbersById(id: string): Promise<string[]> {
@@ -152,7 +95,7 @@ class UserDao {
             .where(eq(users.id, id));
     }
 
-    async create(data: Omit<User, "id">, role: "visitor" | "journalist" | "service_provider" | "tour_guide"): Promise<string> {
+    async create(data: Omit<User, "id">, role: UserRole): Promise<string> {
         const { phone_numbers: phoneNumbers, ...userInfo } = data;
 
         const newUser = await db.insert(users)
@@ -166,9 +109,9 @@ class UserDao {
                         user: newUser[0].id,
                         phone_number: number
                     })));
-
+       
         switch (role) {
-            case "visitor": {
+            case UserRole.visitor:{
                 await db.insert(visitors)
                     .values({
                         id: newUser[0].id
@@ -177,30 +120,30 @@ class UserDao {
                 break;
             }
 
-            case "journalist": {
+            case UserRole.journalist: {
                 await db.insert(journalists)
                     .values({
-                    id: newUser[0].id,
-                    date_of_employment: new Date()
-                });
+                        id: newUser[0].id,
+                        date_of_employment: new Date()
+                    });
 
                 break;
             }
 
-            case "service_provider": {
+            case UserRole.serviceProvider: {
                 await db.insert(service_providers)
                     .values({
-                    id: newUser[0].id
-                });
+                        id: newUser[0].id
+                    });
 
                 break;
             }
 
-            case "tour_guide": {
+            case UserRole.tourGuide: {
                 await db.insert(tour_guide)
                     .values({
-                    id: newUser[0].id
-                });
+                        id: newUser[0].id
+                    });
 
                 break;
             }
@@ -225,7 +168,30 @@ class UserDao {
             return null;
         }
 
-        return result[0].email;
+        return email;
+    }
+
+    async reportPost(visitorId: string, postId: string, reporterId: string): Promise<boolean> {
+        const reportList = await db.select()
+            .from(reports)
+            .where(and(
+                eq(reports.post, postId),
+                eq(reports.visitor, visitorId),
+                eq(reports.reporter, reporterId)
+            ));
+
+        if (reportList.length > 0) {
+            return false;
+        }
+
+        await db.insert(reports)
+            .values({
+                post: postId,
+                visitor: visitorId,
+                reporter: reporterId
+            });
+
+        return true;
     }
 }
 

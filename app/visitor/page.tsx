@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { FaEllipsisV, FaStar } from "react-icons/fa";
+import { FaEllipsisV } from "react-icons/fa";
 import Image from "next/image";
 import { Autoplay } from "swiper/modules";
 import findAllPosts from "@/lib/helper/findallposts";
@@ -10,46 +10,23 @@ import { BounceLoader } from "react-spinners";
 import { Post } from "@/lib/dao/PostDao";
 import Link from "next/link";
 import deletePost from "@/lib/helper/deletepost";
-
-// const initialPosts = [
-//     {
-//         id: 1,
-//         user: {
-//             name: "Alice Johnson",
-//             avatar: "/bg_login.jpg",
-//         },
-//         title: "Discover Hidden Gems in Asia",
-//         description: "A journey through some of the most picturesque destinations in Asia.",
-//         images: ["/bg_login.jpg", "/bg_login.jpg", "/bg_login.jpg"],
-//         places: [
-//             { name: "Bali, Indonesia", rating: 4.5 },
-//             { name: "Kyoto, Japan", rating: 4.8 },
-//             { name: "Chiang Mai, Thailand", rating: 4.7 },
-//         ],
-//         comments: [
-//             {
-//                 id: 1,
-//                 user: {
-//                     name: "Mark Lee",
-//                     avatar: "/bg_login.jpg",
-//                 },
-//                 content: "Bali is amazing! Highly recommend visiting during the summer.",
-//             },
-//         ],
-//     },
-// ];
-
-const StarRating = ({ rating }: { rating: number }) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-        stars.push(
-            <FaStar key={i} color={i <= Math.floor(rating) ? "gold" : "#ccc"} />
-        );
-    }
-    return <div className="flex">{stars}</div>;
-};
+import StarRating from "./component/starrating";
+import loginIsRequired, { Session } from "../api/auth/Session";
+import { UserRole } from "@/lib/helper/userrole";
+import reportPost from "@/lib/helper/reportpost";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const HomePage = () => {
+    const [session, setSession] = useState<Session | null>(null);
+
+    useEffect(() => {
+        loginIsRequired(UserRole.visitor)
+            .then((res) => {
+                setSession(res);
+            })
+    }, []);
+
     const [posts, setPosts] = useState<Post[] | null>(null); // Explicit typing here();
     const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({}); // Explicit typing here
 
@@ -92,8 +69,29 @@ const HomePage = () => {
             })
     };
 
-    const handleReportPost = (postId: string) => {
-        alert(`Report Post with ID: ${postId}`);
+    const handleReportPost = (postId: string, visitorId: string) => {
+        reportPost(visitorId, postId, session?.id as string)
+            .then((res) => {
+                if (res) {
+                    toast.success('Reported successfully', {
+                        position: "top-right",
+                        autoClose: 4000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    })
+                } else {
+                    toast.info('You have already reported this post', {
+                        position: "top-right",
+                        autoClose: 4000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    })
+                }
+            })
         setMenuVisible(false); // Close the menu after action
     };
     const handleAddComment = (postId: string) => {
@@ -125,22 +123,27 @@ const HomePage = () => {
         setCommentInputs((prev) => ({ ...prev, [postId]: value }));
     };
 
-    if (posts === null) {
+    if (session === null || posts === null) {
         return (
             <div className="h-screen w-screen flex justify-center items-center">
-                <BounceLoader color="red" loading={true} size={64} />
+                <BounceLoader color="red" loading={true} size={32} />
             </div>
         );
     }
 
     return (
         <div className="p-4">
+            <ToastContainer />
             {posts.map((post) => (
                 <div key={post.id} className="mb-8 border-b pb-6 relative">
                     <div className="absolute top-2 right-2 cursor-pointer" onClick={(e) => {
                         e.nativeEvent.stopImmediatePropagation();
                         setSelectedPostId(post.id);
-                        setMenuVisible((menuVisible) => !menuVisible); // Show the menu
+                        if (selectedPostId === post.id) {
+                            setMenuVisible((menuVisible) => !menuVisible); // Show the menu
+                        } else {
+                            setMenuVisible(true);
+                        }
                     }}>
                         <FaEllipsisV size={20} />
                     </div>
@@ -152,18 +155,24 @@ const HomePage = () => {
                             className="absolute top-8 right-2 bg-white shadow-lg rounded-lg w-40 z-10"
                         >
                             <ul className="space-y-2 text-sm">
-                                <li
-                                    className="cursor-pointer p-2 hover:bg-gray-100"
-                                    onClick={() => handleDeletePost(post.id, post.visitor)}
-                                >
-                                    Delete Post
-                                </li>
-                                <li
-                                    className="cursor-pointer p-2 hover:bg-gray-100"
-                                    onClick={() => handleReportPost(post.id)}
-                                >
-                                    Report Post
-                                </li>
+                                {
+                                    session.id === post.visitor &&
+                                    (<li
+                                        className="cursor-pointer p-2 hover:bg-gray-100"
+                                        onClick={() => handleDeletePost(post.id, post.visitor)}
+                                    >
+                                        Delete Post
+                                    </li>)
+                                }
+                                {
+                                    session.id !== post.visitor &&
+                                    (<li
+                                        className="cursor-pointer p-2 hover:bg-gray-100"
+                                        onClick={() => handleReportPost(post.id, post.visitor)}
+                                    >
+                                        Report Post
+                                    </li>)
+                                }
                             </ul>
                         </div>
                     )}

@@ -21,6 +21,43 @@ BEFORE INSERT OR UPDATE OF password ON admins
 FOR EACH ROW
 EXECUTE FUNCTION hash_passwords();
 
+--Functions--
+CREATE OR REPLACE FUNCTION find_user_credentials(
+    email_input VARCHAR,
+    role_input VARCHAR
+)
+RETURNS VARCHAR AS $$
+DECLARE
+    user_id VARCHAR;
+BEGIN
+    IF role_input = 'visitor' THEN
+        SELECT id INTO user_id
+        FROM visitors
+        WHERE id = (SELECT id FROM users WHERE users.email = email_input)
+        LIMIT 1;
+    ELSIF role = 'journalist' THEN
+        SELECT id INTO user_id
+        FROM journalists
+        WHERE id = (SELECT id FROM users WHERE users.email = email_input)
+        LIMIT 1;
+    ELSIF role = 'tour_guide' THEN
+        SELECT id INTO user_id
+        FROM tour_guide
+        WHERE id = (SELECT id FROM users WHERE users.email = email_input)
+        LIMIT 1;
+    ELSIF role = 'service_provider' THEN
+        SELECT id INTO user_id
+        FROM service_providers
+        WHERE id = (SELECT id FROM users WHERE users.email = email_input)
+        LIMIT 1;
+    ELSE
+        RAISE EXCEPTION 'Invalid role: %', role;
+    END IF;
+
+    RETURN user_id;
+END;
+$$ LANGUAGE plpgsql;
+
 --Admins--
 INSERT INTO admins (password)
     VALUES ('admin'),
@@ -37,7 +74,8 @@ INSERT INTO admins (password)
 INSERT INTO configuration (key, value, admin_id)
     VALUES ('review_interval', '30 days', 1),
            ('facebook', 'https://www.facebook.com', 1),
-           ('twitter', 'https://www.twitter.com', 1);
+           ('twitter', 'https://www.twitter.com', 1),
+           ('zalo', 'https://www.zalo.com', 1);
 
 --Users--
 INSERT INTO users (email, name, date_of_birth, password, gender) 
@@ -127,9 +165,10 @@ INSERT INTO tour_guide (id)
            ((SELECT id FROM users WHERE email = 'zTt10w@example.com'));
 
 INSERT INTO booked (visitor, tour_guide, comment, start_date, end_date, rating)
-    VALUES  ((SELECT id FROM users WHERE email = 'zTt3w@example.com'), (SELECT id FROM users WHERE email = 'zTt8w@example.com'), 'This is a comment', '2022-01-01', '2022-01-02', 5),
-            ((SELECT id FROM users WHERE email = 'zTt2w@example.com'), (SELECT id FROM users WHERE email = 'zTt9w@example.com'), 'This is a comment', '2022-01-01', '2022-01-02', 5),
-            ((SELECT id FROM users WHERE email = 'zTt1w@example.com'), (SELECT id FROM users WHERE email = 'zTt10w@example.com'), 'This is a comment', '2022-01-01', '2022-01-02', 5);
+    VALUES  ((SELECT id FROM users WHERE email = 'zTt3w@example.com'), (SELECT id FROM users WHERE email = 'zTt8w@example.com'), 'This is a great tour guide', '2022-01-01', '2022-01-02', 5),
+            ((SELECT id FROM users WHERE email = 'zTt2w@example.com'), (SELECT id FROM users WHERE email = 'zTt9w@example.com'), 'This is is not a good tour guide', '2022-01-01', '2022-01-02', 5),
+            ((SELECT id FROM users WHERE email = 'zTt18w@example.com'), (SELECT id FROM users WHERE email = 'zTt9w@example.com'), 'This is is not a good tour guide', '2022-01-01', '2022-01-02', 5),
+            ((SELECT id FROM users WHERE email = 'zTt1w@example.com'), (SELECT id FROM users WHERE email = 'zTt10w@example.com'), 'This is a great tour guide', '2022-01-01', '2022-01-02', 5);
 
 INSERT INTO service_providers (id)
     VALUES ((SELECT id FROM users WHERE email = 'zTt11w@example.com')),
@@ -142,6 +181,7 @@ INSERT INTO service_providers (id)
 INSERT INTO warn (admin_id, "user", content)
     VALUES (1, (SELECT id FROM users WHERE email = 'zTt1w@example.com'), 'This is a warning'),
            (1, (SELECT id FROM users WHERE email = 'zTt2w@example.com'), 'This is a warning'),
+           (2, (SELECT id FROM users WHERE email = 'zTt3w@example.com'), 'This is a warning'),
            (3, (SELECT id FROM users WHERE email = 'zTt3w@example.com'), 'This is a warning');    
 
 --Places--
@@ -202,6 +242,13 @@ INSERT INTO added_in (hash_tag, post, visitor)
            ('test4', (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt17w@example.com')), (SELECT id FROM users WHERE email = 'zTt17w@example.com')),
            ('test5', (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt18w@example.com')), (SELECT id FROM users WHERE email = 'zTt18w@example.com')),
            ('test6', (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt19w@example.com')), (SELECT id FROM users WHERE email = 'zTt19w@example.com'));
+
+INSERT INTO reports (post, visitor, reporter)
+    VALUES ((SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt1w@example.com')), (SELECT id FROM users WHERE email = 'zTt1w@example.com'), (SELECT id FROM users WHERE email = 'zTt2w@example.com')),
+           ((SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt1w@example.com')), (SELECT id FROM users WHERE email = 'zTt1w@example.com'), (SELECT id FROM users WHERE email = 'zTt3w@example.com')),
+           ((SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt1w@example.com')), (SELECT id FROM users WHERE email = 'zTt1w@example.com'), (SELECT id FROM users WHERE email = 'zTt17w@example.com')),
+           ((SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt1w@example.com')), (SELECT id FROM users WHERE email = 'zTt1w@example.com'), (SELECT id FROM users WHERE email = 'zTt18w@example.com')),
+           ((SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt1w@example.com')), (SELECT id FROM users WHERE email = 'zTt1w@example.com'), (SELECT id FROM users WHERE email = 'zTt19w@example.com'));
 
 --Services--
 INSERT INTO services (longtitude, latitude, name, provider)

@@ -173,6 +173,8 @@ class PostDao {
             .where(and(eq(posts.id, id),
                 eq(posts.visitor, visitorId)));
     }
+
+    
 }
 
 export const postDao = new PostDao();

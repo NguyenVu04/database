@@ -154,6 +154,13 @@ CREATE TABLE IF NOT EXISTS "posts" (
 	CONSTRAINT "posts_pkey" PRIMARY KEY("id","visitor")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "reports" (
+	"post" uuid NOT NULL,
+	"visitor" uuid NOT NULL,
+	"reporter" uuid NOT NULL,
+	CONSTRAINT "report_pkey" PRIMARY KEY("post","visitor","reporter")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "restaurants" (
 	"longtitude" numeric(4) NOT NULL,
 	"latitude" numeric(4) NOT NULL,
@@ -402,6 +409,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "posts" ADD CONSTRAINT "posts_visitor_visitors_id_fk" FOREIGN KEY ("visitor") REFERENCES "public"."visitors"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "reports" ADD CONSTRAINT "reports_reporter_visitors_id_fk" FOREIGN KEY ("reporter") REFERENCES "public"."visitors"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "reports" ADD CONSTRAINT "post_fkey" FOREIGN KEY ("post","visitor") REFERENCES "public"."posts"("id","visitor") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

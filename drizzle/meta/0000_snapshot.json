@@ -1,5 +1,5 @@
 {
-  "id": "7caab0d2-1a57-49b5-b6b2-e97855a4c546",
+  "id": "b8762c15-44bb-445e-8ba9-9a8aed550eb7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1229,6 +1229,75 @@
           "columns": [
             "id",
             "visitor"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.reports": {
+      "name": "reports",
+      "schema": "",
+      "columns": {
+        "post": {
+          "name": "post",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "visitor": {
+          "name": "visitor",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reporter": {
+          "name": "reporter",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "reports_reporter_visitors_id_fk": {
+          "name": "reports_reporter_visitors_id_fk",
+          "tableFrom": "reports",
+          "tableTo": "visitors",
+          "columnsFrom": [
+            "reporter"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "post_fkey": {
+          "name": "post_fkey",
+          "tableFrom": "reports",
+          "tableTo": "posts",
+          "columnsFrom": [
+            "post",
+            "visitor"
+          ],
+          "columnsTo": [
+            "id",
+            "visitor"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "report_pkey": {
+          "name": "report_pkey",
+          "columns": [
+            "post",
+            "visitor",
+            "reporter"
           ]
         }
       },

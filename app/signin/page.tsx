@@ -1,86 +1,97 @@
 'use client';
+
 import { UserRole } from "@/lib/helper/userrole";
-import { signIn } from "next-auth/react";
-import { redirect, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { FaHome } from "react-icons/fa";
+import Head from "next/head";
+import { redirect } from "next/navigation";
+import { FaHome, FaUser, FaPenFancy, FaMapMarkerAlt, FaToolbox, FaUserShield, FaUserPlus, FaGlobe } from "react-icons/fa"; // Import icons
 
 export default function LoginPage() {
-    const params = useSearchParams();
+  const handleLogin = (role: string) => {
+    redirect(`/signin/${role}`);
+  };
 
-    if (!params.has("role") || UserRole[params.get("role") as keyof typeof UserRole] === undefined) {
-        redirect("/");
-    }
-
-    const [error, setError] = useState<string | null>(null);
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        const result = await signIn("credentials", {
-            redirect: false,
-            email: e.currentTarget.email.value,
-            password: e.currentTarget.password.value,
-            role: "user",
-        });
-        
-        if (result?.error) {
-            setError("Invalid email or password");
-            return;
-        }
-
-        redirect("/");
-    };
-    return (
-        <div
-            className="h-screen w-screen bg-cover bg-center flex items-center justify-center bg-[url('/bg_login.jpg')] bg-no-repeat"
-        >
-            <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-lg w-full max-w-md">
-                <div className="flex justify-center mb-4">
-                    <FaHome
-                        className="text-3xl text-gray-700 cursor-pointer hover:text-gray-900"
-                        onClick={() => redirect("/")}
-                    />
-                </div>
-                <h1 className="text-2xl font-semibold text-gray-800 text-center mb-6">
-                    SIGN IN
-                </h1>
-                {
-                    error && <p className="text-red-500 text-center mb-4">{error}</p>
-                }
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                            Email
-                        </label>
-                        <input
-                            required
-                            id="email"
-                            type="email"
-                            placeholder="Enter your email"
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                            Password
-                        </label>
-                        <input
-                            required
-                            id="password"
-                            type="password"
-                            placeholder="Enter your password"
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-                    >
-                        Sign in
-                    </button>
-                </form>
-            </div>
+  return (
+    <>
+      <Head>
+        <title>Login Options</title>
+      </Head>
+      <div
+        className="min-h-screen flex items-center justify-center bg-cover bg-center bg-[url('/bg_login.jpg')] bg-no-repeat"
+      >
+        {/* Home Button */}
+        <div className="absolute top-4 left-4">
+          <button
+            type="button"
+            className="flex items-center text-white bg-blue-500 p-2 rounded-full shadow-lg hover:bg-blue-600"
+            onClick={() => redirect("/")}
+          >
+            <FaHome className="text-xl" />
+            <span className="ml-2 font-medium">Main Page</span>
+          </button>
         </div>
-    );
+
+        {/* Sign Up Button */}
+        <div className="absolute top-4 right-4">
+          <button
+            type="button"
+            className="flex items-center text-white bg-green-500 px-4 py-2 rounded-lg shadow-lg hover:bg-green-600"
+            onClick={() => redirect("/signup")}
+          >
+            <FaUserPlus className="text-xl" />
+            <span className="ml-2 font-medium">Sign Up</span>
+          </button>
+        </div>
+
+        {/* Login Options */}
+        <div className="bg-white bg-opacity-80 rounded-lg shadow-lg p-8 w-full max-w-md text-center">
+          <div className="mx-auto w-fit mb-3">
+            <FaGlobe size={64} color="blue"/>
+          </div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-6">
+            Select Your Login Role
+          </h1>
+          <button
+            type="button"
+            className="flex items-center justify-center w-full py-2 px-4 mb-4 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+            onClick={() => handleLogin(UserRole.visitor)}
+          >
+            <FaUser className="text-xl mr-2" />
+            Login as Visitor
+          </button>
+          <button
+            type="button"
+            className="flex items-center justify-center w-full py-2 px-4 mb-4 text-white bg-green-500 rounded-lg hover:bg-green-600"
+            onClick={() => handleLogin(UserRole.journalist)}
+          >
+            <FaPenFancy className="text-xl mr-2" />
+            Login as Journalist
+          </button>
+          <button
+            type="button"
+            className="flex items-center justify-center w-full py-2 px-4 mb-4 text-white bg-purple-500 rounded-lg hover:bg-purple-600"
+            onClick={() => handleLogin(UserRole.tourGuide)}
+          >
+            <FaMapMarkerAlt className="text-xl mr-2" />
+            Login as Tour Guide
+          </button>
+          <button
+            type="button"
+            className="flex items-center justify-center w-full py-2 px-4 mb-4 text-white bg-orange-500 rounded-lg hover:bg-orange-600"
+            onClick={() => handleLogin(UserRole.serviceProvider)}
+          >
+            <FaToolbox className="text-xl mr-2" />
+            Login as Service Provider
+          </button>
+          <button
+            type="button"
+            className="flex items-center justify-center w-full py-2 px-4 text-white bg-red-500 rounded-lg hover:bg-red-600"
+            onClick={() => handleLogin("admin")}
+          >
+            <FaUserShield className="text-xl mr-2" />
+            Login as Admin
+          </button>
+        </div>
+      </div>
+    </>
+  );
 }

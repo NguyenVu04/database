@@ -6,15 +6,18 @@ import { userDao } from "@/lib/dao/UserDao";
 import { options } from "./authoptions";
 import { UserRole } from "@/lib/helper/userrole";
 
+export type Session = {
+    id: string | number,
+    role: UserRole | "admin"
+}
+
+
 export default async function loginIsRequired(
     roleRequired?: UserRole | "admin"):
-    Promise<{
-        id: string | number,
-        role: UserRole | "admin"
-    } | null> {
+    Promise<Session | null> {
 
     const session = await getServerSession(options);
-    
+
     if ((!session || !session.user || !session.user.email) && roleRequired) {
         redirect("/signin");
     } else if (!session || !session.user || !session.user.email) {
@@ -34,7 +37,7 @@ export default async function loginIsRequired(
                 role: "admin"
             }
         }
-        case "visitor": 
+        case "visitor":
         case "journalist":
         case "service_provider":
         case "tour_guide": {
