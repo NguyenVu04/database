@@ -16,12 +16,14 @@ export const include = pgTable("include", {
         name: "place_fkey",
         columns: [t.longtitude, t.latitude],
         foreignColumns: [places.longtitude, places.latitude],
-    }),
+    })
+    .onDelete("cascade"),
     foreignKey({
         name: "post_fkey",
         columns: [t.post, t.visitor],
         foreignColumns: [posts.id, posts.visitor],
-    }),
+    })
+    .onDelete("cascade"),
     primaryKey({
         name: "include_pkey",
         columns: [t.longtitude, t.latitude, t.post, t.visitor],

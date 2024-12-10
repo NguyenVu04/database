@@ -12,7 +12,8 @@ export const items = pgTable("items", {
         name: "convinience_store_fkey",
         columns: [t.longtitude, t.latitude],
         foreignColumns: [convinience_stores.longtitude, convinience_stores.latitude],
-    }),
+    })
+    .onDelete("cascade"),
     primaryKey({
         name: "item_pkey",
         columns: [t.longtitude, t.latitude, t.price, t.name],

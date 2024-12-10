@@ -17,6 +17,7 @@ const fuel = pgTable("fuel", {
         columns: [t.longtitude, t.latitude],
         foreignColumns: [fuel_station.longtitude, fuel_station.latitude],
     })
+    .onDelete("cascade"),
 ]);
 
 export const insertFuelSchema = createInsertSchema(fuel);

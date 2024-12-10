@@ -1,6 +1,6 @@
 {
-  "id": "026f2a36-adce-4a1d-90da-9808109a50cb",
-  "prevId": "e256bdd0-c8f3-4642-8fa1-f8d82cfe79a1",
+  "id": "433e94e2-2c5d-43a8-a04b-9f8dc1d8a2c5",
+  "prevId": "7caab0d2-1a57-49b5-b6b2-e97855a4c546",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -55,7 +55,7 @@
             "visitor"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -130,7 +130,7 @@
             "latitude"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -497,7 +497,7 @@
             "latitude"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -558,7 +558,7 @@
             "latitude"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -609,7 +609,7 @@
             "latitude"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -677,7 +677,7 @@
             "latitude"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -738,7 +738,7 @@
             "latitude"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -807,7 +807,7 @@
             "latitude"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         },
         "post_fkey": {
           "name": "post_fkey",
@@ -822,7 +822,7 @@
             "visitor"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -885,7 +885,7 @@
             "latitude"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -993,7 +993,7 @@
             "latitude"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -1057,7 +1057,7 @@
             "visitor"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -1269,7 +1269,7 @@
             "latitude"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -1439,7 +1439,7 @@
             "room_price"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -1596,7 +1596,7 @@
             "latitude"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -1688,7 +1688,7 @@
             "visitor"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         },
         "place_fkey": {
           "name": "place_fkey",
@@ -1944,7 +1944,7 @@
             "latitude"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -2118,7 +2118,7 @@
             "latitude"
           ],
           "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {

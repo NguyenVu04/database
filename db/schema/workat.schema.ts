@@ -14,7 +14,8 @@ export const work_at = pgTable("work_at", {
         name: "place_fkey",
         columns: [t.longtitude, t.latitude],
         foreignColumns: [places.longtitude, places.latitude],
-    }),
+    })
+    .onDelete("cascade"),
     primaryKey({
         name: "work_at_pkey",
         columns: [t.longtitude, t.latitude, t.tour_guide],

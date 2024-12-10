@@ -12,7 +12,8 @@ export const notes = pgTable("notes", {
         name: "trip_fkey",
         columns: [t.trip, t.visitor],
         foreignColumns: [trips.id, trips.visitor],
-    }),
+    })
+    .onDelete("cascade"),
     primaryKey({
         name: "note_pkey",
         columns: [t.trip, t.visitor, t.time, t.content],

@@ -1,49 +1,87 @@
 import db from "@/db/db";
+import { comments } from "@/db/schema/comment.schema";
 import { include } from "@/db/schema/include.schema";
+import { places } from "@/db/schema/place.schema";
 import { contentType, posts } from "@/db/schema/post.schema";
 import { users } from "@/db/schema/user.schema";
-import { and, desc, eq, getTableColumns } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
+
+export type Post = {
+    id: string;
+    visitor: string;
+    content: contentType;
+    post_date: Date;
+    username: string;
+    places: {
+        longtitude: string,
+        latitude: string,
+        place_name: string,
+        place_address: string,
+        star: number
+    }[], 
+    comments: {
+        id: string,
+        content: string,
+        comment_date: Date,
+        sender_name: string,
+        sender_id: string
+    }[],
+}
 
 class PostDao {
     constructor() { }
 
-    async findAll(page: number, limit: number): Promise<{
-        id: string;
-        visitor: string;
-        content: contentType;
-        post_date: Date;
-        username: string;
-        userId: string;
-        places: { longtitude: string, latitude: string, star: number }[]
-    }[]> {
+    async findAll(page: number, limit: number): Promise<Post[]> {
         const postList = db.select()
             .from(posts)
             .limit(limit)
             .offset((page - 1) * limit)
+            .orderBy(desc(posts.post_date))
             .as("post_list");
 
         const userPosts = await db.select({
-            ...getTableColumns(posts),
+            id: postList.id,
+            content: postList.content,
+            post_date: postList.post_date,
             username: users.name,
-            userId: users.id,
+            visitor: users.id,
         })
             .from(postList)
             .innerJoin(users, eq(users.id, postList.visitor))
             .orderBy(desc(postList.post_date));
 
         const result = userPosts.map(async (post) => {
-            const places = await db.select({
+            const placeList = await db.select({
                 longtitude: include.longtitude,
                 latitude: include.latitude,
-                star: include.star
+                star: include.star,
+                place_name: places.name,
+                place_address: places.address
             })
                 .from(include)
+                .innerJoin(places,
+                    and(
+                        eq(places.longtitude, include.longtitude),
+                        eq(places.latitude, include.latitude)
+                    ))
                 .where(eq(include.post, post.id));
+
+            const commentList = await db.select({
+                id: comments.id,
+                content: comments.content,
+                sender_id: comments.sender,
+                sender_name: users.name,
+                comment_date: comments.comment_date
+            })
+                .from(comments)
+                .innerJoin(users, eq(users.id, comments.sender))
+                .where(eq(comments.post, post.id));
 
             return {
                 ...post,
                 content: post.content as contentType,
-                places: places
+                places: placeList,
+                comments: commentList
             }
         })
 

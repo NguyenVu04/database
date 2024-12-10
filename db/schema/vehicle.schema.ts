@@ -11,7 +11,8 @@ export const vehicles = pgTable("vehicles", {
         name: "place_fkey",
         columns: [t.longtitude, t.latitude],
         foreignColumns: [auto_repair_shops.longtitude, auto_repair_shops.latitude],
-    }),
+    })
+    .onDelete("cascade"),
     primaryKey({
         name: "vehicle_pkey",
         columns: [t.longtitude, t.latitude, t.type],

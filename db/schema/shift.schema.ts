@@ -13,7 +13,8 @@ export const shifts = pgTable("shifts", {
         name: "service_fkey",
         columns: [t.longtitude, t.latitude],
         foreignColumns: [services.longtitude, services.latitude],
-    }),
+    })
+    .onDelete("cascade"),
     primaryKey({
         name: "shift_pkey",
         columns: [t.longtitude, t.latitude, t.start_time, t.end_time],

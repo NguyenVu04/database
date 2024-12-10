@@ -14,7 +14,8 @@ export const room_devices = pgTable("room_devices", {
         name: "hotel_room_fkey",
         columns: [t.longtitude, t.latitude, t.room_type, t.room_price],
         foreignColumns: [hotel_rooms.longtitude, hotel_rooms.latitude, hotel_rooms.room_type, hotel_rooms.room_price],
-    }),
+    })
+    .onDelete("cascade"),
     primaryKey({
         name: "room_service_pkey",
         columns: [t.longtitude, t.latitude, t.room_type, t.room_price, t.device_name, t.device_quantity],

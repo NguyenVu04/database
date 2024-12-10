@@ -10,7 +10,8 @@ export const restaurants = pgTable("restaurants", {
         name: "place_fkey",
         columns: [t.longtitude, t.latitude],
         foreignColumns: [services.longtitude, services.latitude],
-    }),
+    })
+    .onDelete("cascade"),
     primaryKey({
         name: "restaurant_pkey",
         columns: [t.longtitude, t.latitude],

@@ -19,7 +19,8 @@ export const through = pgTable("through", {
         name: "trip_fkey",
         columns: [t.trip, t.visitor],
         foreignColumns: [trips.id, trips.visitor],
-    }),
+    })
+    .onDelete("cascade"),
     foreignKey({
         name: "place_fkey",
         columns: [t.longtitude, t.latitude],

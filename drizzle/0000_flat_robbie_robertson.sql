@@ -275,13 +275,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "added_in" ADD CONSTRAINT "post_fkey" FOREIGN KEY ("post","visitor") REFERENCES "public"."posts"("id","visitor") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "added_in" ADD CONSTRAINT "post_fkey" FOREIGN KEY ("post","visitor") REFERENCES "public"."posts"("id","visitor") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "auto_repair_shops" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "auto_repair_shops" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -329,49 +329,49 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "convinience_stores" ADD CONSTRAINT "convinience_store_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "convinience_stores" ADD CONSTRAINT "convinience_store_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "fuel" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."fuel_station"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "fuel" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."fuel_station"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "fuel_station" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "fuel_station" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "hotels" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "hotels" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "hotel_rooms" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."hotels"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "hotel_rooms" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."hotels"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "include" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."places"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "include" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."places"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "include" ADD CONSTRAINT "post_fkey" FOREIGN KEY ("post","visitor") REFERENCES "public"."posts"("id","visitor") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "include" ADD CONSTRAINT "post_fkey" FOREIGN KEY ("post","visitor") REFERENCES "public"."posts"("id","visitor") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "items" ADD CONSTRAINT "convinience_store_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."convinience_stores"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "items" ADD CONSTRAINT "convinience_store_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."convinience_stores"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -383,13 +383,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "menu" ADD CONSTRAINT "restaurant_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."restaurants"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "menu" ADD CONSTRAINT "restaurant_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."restaurants"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "notes" ADD CONSTRAINT "trip_fkey" FOREIGN KEY ("trip","visitor") REFERENCES "public"."trips"("id","visitor") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "notes" ADD CONSTRAINT "trip_fkey" FOREIGN KEY ("trip","visitor") REFERENCES "public"."trips"("id","visitor") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -407,7 +407,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "restaurants" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "restaurants" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -425,7 +425,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "room_devices" ADD CONSTRAINT "hotel_room_fkey" FOREIGN KEY ("longtitude","latitude","room_type","room_price") REFERENCES "public"."hotel_rooms"("longtitude","latitude","room_type","room_price") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "room_devices" ADD CONSTRAINT "hotel_room_fkey" FOREIGN KEY ("longtitude","latitude","room_type","room_price") REFERENCES "public"."hotel_rooms"("longtitude","latitude","room_type","room_price") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -443,13 +443,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "shifts" ADD CONSTRAINT "service_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "shifts" ADD CONSTRAINT "service_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."services"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "through" ADD CONSTRAINT "trip_fkey" FOREIGN KEY ("trip","visitor") REFERENCES "public"."trips"("id","visitor") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "through" ADD CONSTRAINT "trip_fkey" FOREIGN KEY ("trip","visitor") REFERENCES "public"."trips"("id","visitor") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -473,7 +473,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "vehicles" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."auto_repair_shops"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "vehicles" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."auto_repair_shops"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -503,7 +503,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "work_at" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."places"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "work_at" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."places"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

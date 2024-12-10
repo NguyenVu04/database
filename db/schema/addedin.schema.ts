@@ -12,7 +12,8 @@ export const added_in = pgTable("added_in", {
         name: "post_fkey",
         columns: [t.post, t.visitor],
         foreignColumns: [posts.id, posts.visitor],
-    }),
+    })
+    .onDelete("cascade"),
     primaryKey({
         name: "added_in_pkey",
         columns: [t.hash_tag, t.post, t.visitor],

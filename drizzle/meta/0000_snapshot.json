@@ -1,5 +1,5 @@
 {
-  "id": "e256bdd0-c8f3-4642-8fa1-f8d82cfe79a1",
+  "id": "7caab0d2-1a57-49b5-b6b2-e97855a4c546",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -54,7 +54,7 @@
             "id",
             "visitor"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -129,7 +129,7 @@
             "longtitude",
             "latitude"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -496,7 +496,7 @@
             "longtitude",
             "latitude"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -557,7 +557,7 @@
             "longtitude",
             "latitude"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -608,7 +608,7 @@
             "longtitude",
             "latitude"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -676,7 +676,7 @@
             "longtitude",
             "latitude"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -737,7 +737,7 @@
             "longtitude",
             "latitude"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -806,7 +806,7 @@
             "longtitude",
             "latitude"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "post_fkey": {
@@ -821,7 +821,7 @@
             "id",
             "visitor"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -884,7 +884,7 @@
             "longtitude",
             "latitude"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -992,7 +992,7 @@
             "longtitude",
             "latitude"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1056,7 +1056,7 @@
             "id",
             "visitor"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1268,7 +1268,7 @@
             "longtitude",
             "latitude"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1438,7 +1438,7 @@
             "room_type",
             "room_price"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1595,7 +1595,7 @@
             "longtitude",
             "latitude"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1687,7 +1687,7 @@
             "id",
             "visitor"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "place_fkey": {
@@ -1943,7 +1943,7 @@
             "longtitude",
             "latitude"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -2117,7 +2117,7 @@
             "longtitude",
             "latitude"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
