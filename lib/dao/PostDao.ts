@@ -130,14 +130,12 @@ class PostDao {
 
     async create(
         visitor: string,
-        post_date: Date,
         content: contentType,
         places: { longtitude: number, latitude: number, star: number }[]): Promise<string | null> {
 
         const newPost = await db.insert(posts)
             .values({
                 visitor,
-                post_date,
                 content
             })
             .returning();
