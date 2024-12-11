@@ -1,17 +1,31 @@
 'use client';
+import loginIsRequired from "@/app/api/auth/Session";
 import { UserRole } from "@/lib/helper/userrole";
 import { signIn } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { use, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
+import { BounceLoader } from "react-spinners";
 
 export default function LoginPage({ params }: { params: Promise<{ role: string }> }) {
-    const resolvedParams = use(params); 
-    const role = resolvedParams.role; 
+    const [resolvedparams, setResolvedParams] = useState<{ role: string } | null>(null);
 
-    if (UserRole[role as keyof typeof UserRole] === undefined) {
-        redirect("/");
-    }
+    useEffect(() => {
+        params.then((params) => {
+            const role = UserRole[params.role as keyof typeof UserRole];
+
+            if (!role) {
+                redirect("/signin");
+            }
+
+            loginIsRequired(false, role).then((res) => {
+                if (res) {
+                    redirect(`/${params.role}`);
+                }
+                setResolvedParams(params);
+            });
+        });
+    }, [params]);
 
     const [error, setError] = useState<string | null>(null);
 
@@ -30,8 +44,17 @@ export default function LoginPage({ params }: { params: Promise<{ role: string }
             return;
         }
 
-        redirect(`/${role}`);
+        redirect(`/${resolvedparams?.role}`);
     };
+
+    if (!resolvedparams) {
+        return (
+            <div className="h-screen w-screen flex justify-center items-center">
+                <BounceLoader color="red" loading={true} size={32} />
+            </div>
+        );
+    }
+
     return (
         <div
             className="h-screen w-screen bg-cover bg-center flex items-center justify-center bg-[url('/bg_login.jpg')] bg-no-repeat"

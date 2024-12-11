@@ -148,8 +148,8 @@ class PostDao {
         places.forEach(async (place) => {
             await db.insert(include)
                 .values({
-                    longtitude: place.longtitude.toFixed(4),
-                    latitude: place.latitude.toFixed(4),
+                    longtitude: place.longtitude.toString(),
+                    latitude: place.latitude.toString(),
                     post: newPost[0].id,
                     visitor: visitor,
                     star: place.star
@@ -174,28 +174,121 @@ class PostDao {
         };
     }
 
-    async updateById(id: string, visitorId: string, data: contentType): Promise<void> {
-        const post = await db.select()
+    async updateById(
+        postId: string,
+        visitorId: string,
+        content: {
+            content: string;
+            images?: string[];
+        },
+        places: {
+            longtitude: number;
+            latitude: number;
+            star: number;
+        }[]
+    ): Promise<void> {
+        const foundPosts = await db.select()
             .from(posts)
-            .where(and(eq(posts.id, id),
+            .where(and(eq(posts.id, postId),
                 eq(posts.visitor, visitorId)))
             .limit(1);
 
-        if (post.length === 0) {
+        if (foundPosts.length === 0) {
             return;
         }
 
-        const content = post[0].content as contentType;
-        if (content.mediaUrl) {
-            await del(content.mediaUrl);
+        const currentPost = foundPosts[0];
+
+        const newImages = content.images ?? [];
+        const currentImages = (currentPost.content as contentType).mediaUrl ?? [];
+
+        const deletedImages = currentImages.filter((url) => !newImages.includes(url));
+        if (deletedImages.length > 0) {
+            await del(deletedImages);
         }
+
+        console.log(content);
 
         await db.update(posts)
             .set({
-                content: data
+                content: newImages.length === 0 ?
+                    {
+                        content: content.content
+                    } : {
+                        content: content.content,
+                        mediaUrl: newImages
+                    },
             })
-            .where(and(eq(posts.id, id),
-                eq(posts.visitor, visitorId)));
+            .where(
+                and(
+                    eq(posts.id, postId),
+                    eq(posts.visitor, visitorId)
+                )
+            );
+
+        const currentPlaces = await db.select()
+            .from(include)
+            .where(
+                and(
+                    eq(include.post, postId),
+                    eq(include.visitor, visitorId),
+                )
+            );
+
+        const newPlaces = places.map((place) => ({
+            longtitude: place.longtitude,
+            latitude: place.latitude,
+            post: postId,
+            visitor: visitorId,
+            star: place.star
+        }));
+
+        const addedPlaces = newPlaces.filter((place) => !currentPlaces.some((p) => Number(p.longtitude) === place.longtitude && Number(p.latitude) === place.latitude));
+        const deletedPlaces = currentPlaces.filter((place) => !newPlaces.some((p) => p.longtitude === Number(place.longtitude) && p.latitude === Number(place.latitude)));
+        const updatedPlaces = newPlaces.filter((place) => currentPlaces.some((p) => Number(p.longtitude) === place.longtitude && Number(p.latitude) === place.latitude));
+
+        if (addedPlaces.length > 0) {
+            addedPlaces.forEach(async (place) => {
+                await db.insert(include)
+                    .values({
+                        longtitude: place.longtitude.toString(),
+                        latitude: place.latitude.toString(),
+                        post: place.post,
+                        visitor: place.visitor,
+                        star: place.star
+                    });
+            })
+        }
+        if (deletedPlaces.length > 0) {
+            deletedPlaces.forEach(async (place) => {
+                await db.delete(include)
+                    .where(
+                        and(
+                            eq(include.post, place.post),
+                            eq(include.visitor, place.visitor),
+                            eq(include.longtitude, place.longtitude),
+                            eq(include.latitude, place.latitude)
+                        )
+                    );
+            })
+        }
+
+        if (updatedPlaces.length > 0) {
+            updatedPlaces.forEach(async (place) => {
+                await db.update(include)
+                    .set({
+                        star: place.star
+                    })
+                    .where(
+                        and(
+                            eq(include.post, place.post),
+                            eq(include.visitor, place.visitor),
+                            eq(include.longtitude, place.longtitude.toString()),
+                            eq(include.latitude, place.latitude.toString())
+                        )
+                    );
+            })
+        }
     }
 
     async createPostComment(

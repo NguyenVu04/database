@@ -13,12 +13,13 @@ export type Session = {
 
 
 export default async function loginIsRequired(
+    redirectUnauthorized: boolean,
     roleRequired?: UserRole | "admin"):
     Promise<Session | null> {
 
     const session = await getServerSession(options);
 
-    if ((!session || !session.user || !session.user.email) && roleRequired) {
+    if ((!session || !session.user || !session.user.email) && redirectUnauthorized) {
         redirect("/signin");
     } else if (!session || !session.user || !session.user.email) {
         return null;

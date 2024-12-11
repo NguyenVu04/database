@@ -19,12 +19,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import { redirect } from "next/navigation";
 import getPostComments from "@/lib/helper/getpostcomments";
 import createComment from "@/lib/helper/createComment";
+import UpdatePostForm from "./component/UpdatePostForm";
 
 const HomePage = () => {
     const [session, setSession] = useState<Session | null>(null);
 
     useEffect(() => {
-        loginIsRequired(UserRole.visitor)
+        loginIsRequired(true, UserRole.visitor)
             .then((res) => {
                 setSession(res);
             })
@@ -41,6 +42,7 @@ const HomePage = () => {
     }, []);
 
     const [menuVisible, setMenuVisible] = useState<boolean>(false);
+    const [updatedPost, setUpdatedPost] = useState<Post | null>(null);
     const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -97,6 +99,11 @@ const HomePage = () => {
             })
         setMenuVisible(false); // Close the menu after action
     };
+
+    const handleUpdatePost = (post: Post) => {
+        setUpdatedPost(post);
+    }
+
     const handleAddComment = async (postId: string, visitorId: string) => {
         if (!session || !session.id || posts === null) {
             redirect("/signin");
@@ -144,6 +151,37 @@ const HomePage = () => {
     return (
         <div className="p-4">
             <ToastContainer />
+            {
+                updatedPost &&
+                <UpdatePostForm
+                    onClose={() => {
+                        setUpdatedPost(null);
+                        window.location.reload();
+                    }}
+                    postId={updatedPost.id}
+                    visitorId={updatedPost.visitor}
+                    currentPlaces={updatedPost.places
+                        .map((place) => {
+                            return {
+                                latitude: String(place.latitude),
+                                longtitude: String(place.longtitude),
+                                name: place.place_name,
+                                address: place.place_address
+                            }
+                        })}
+                    currentContent={updatedPost.content.content}
+                    currentImages={updatedPost.content.mediaUrl}
+                    currentRatings={updatedPost.places
+                        .map((place) => {
+                            return {
+                                [`${place.latitude},${place.longtitude}`]: place.star
+                            }
+                        })
+                        .reduce((acc, star) => {
+                            return { ...acc, ...star }
+                        })}
+                />
+            }
             {posts.map((post) => (
                 <div key={post.id} className="mb-8 border-b pb-6 relative">
                     <div className="absolute top-2 right-2 cursor-pointer" onClick={(e) => {
@@ -168,7 +206,7 @@ const HomePage = () => {
                                 {
                                     session.id === post.visitor &&
                                     (<li
-                                        className="cursor-pointer p-2 hover:bg-gray-100"
+                                        className="cursor-pointer p-2 hover:bg-gray-100 rounded-t-lg"
                                         onClick={() => handleDeletePost(post.id, post.visitor)}
                                     >
                                         Delete Post
@@ -181,6 +219,15 @@ const HomePage = () => {
                                         onClick={() => handleReportPost(post.id, post.visitor)}
                                     >
                                         Report Post
+                                    </li>)
+                                }
+                                {
+                                    session.id === post.visitor &&
+                                    (<li
+                                        className="cursor-pointer p-2 hover:bg-gray-100 rounded-b-lg"
+                                        onClick={() => handleUpdatePost(post)}
+                                    >
+                                        Update Post
                                     </li>)
                                 }
                             </ul>

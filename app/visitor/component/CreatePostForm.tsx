@@ -1,7 +1,9 @@
+'use client';
 import { Place } from "@/db/schema/place.schema";
 import createPost from "@/lib/helper/createpost";
 import { searchPlace } from "@/lib/helper/seachPlaces";
 import { debounce } from "lodash";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import React, { useState, ChangeEvent, useMemo, useEffect, FormEvent } from "react";
 import { AiFillStar, AiOutlineStar, AiOutlineDelete, AiOutlinePicture, AiOutlineSearch } from "react-icons/ai";
@@ -113,6 +115,19 @@ export default function CreatePostForm({ visitorId, onClose }: CreatePostFormPro
     if (!visitorId) {
       redirect("/signin");
     }
+
+    if (selectedPlaces.length === 0) {
+      toast.error("Please select at least one place.", {
+        position: "top-center",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      return;
+    }
+
     try {
       await createPost({
         content: content,
@@ -165,11 +180,30 @@ export default function CreatePostForm({ visitorId, onClose }: CreatePostFormPro
               accept="image/*"
               onChange={(event) => {
                 if (event.target.files) {
-                  setImages(Array.from(event.target.files));
+                  setImages((prev) => [...prev, ...Array.from(event.target.files as FileList)]);
                 }
               }}
               className="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             />
+            <ul className="mt-2 flex flex-wrap">
+              {
+                images.map((image, index) => (
+                  <li key={index} className="w-full flex justify-between p-4 mb-4 rounded-lg bg-gray-100">
+                    <Link href={URL.createObjectURL(image)} target="_blank">
+                      <p className="text-black">{image.name}</p>
+                    </Link>
+                    <button
+                      title="remove image"
+                      type="button"
+                      onClick={() => setImages(images.filter((_, i) => i !== index))}
+                      className="text-red-500"
+                    >
+                      <AiOutlineDelete size={24} />
+                    </button>
+                  </li>
+                ))
+              }
+            </ul>
           </div>
 
           <div className="mb-6">

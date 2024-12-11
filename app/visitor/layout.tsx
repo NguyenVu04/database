@@ -7,7 +7,7 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const session = await loginIsRequired(UserRole.visitor);
+    const session = await loginIsRequired(true, UserRole.visitor);
 
     return (
         <div>
