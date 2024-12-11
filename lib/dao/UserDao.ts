@@ -96,6 +96,15 @@ class UserDao {
     }
 
     async create(data: Omit<User, "id">, role: UserRole): Promise<string> {
+        const checkUser = await db.select()
+            .from(users)
+            .where(eq(users.email, data.email))
+            .limit(1);
+        
+        if (checkUser.length > 0) {
+            throw new Error("EXIST");
+        }
+
         const { phone_numbers: phoneNumbers, ...userInfo } = data;
 
         const newUser = await db.insert(users)

@@ -8,8 +8,8 @@ import React, { ChangeEvent, FormEvent, use, useState } from "react";
 import { FaHome } from "react-icons/fa";
 
 export default function SignupPage({ params }: { params: Promise<{ role: string }> }) {
-    const resolvedParams = use(params); 
-    const role = resolvedParams.role; 
+    const resolvedParams = use(params);
+    const role = resolvedParams.role;
 
     if (UserRole[role as keyof typeof UserRole] === undefined) {
         redirect("/");
@@ -52,20 +52,24 @@ export default function SignupPage({ params }: { params: Promise<{ role: string 
             setError("You must be at least 18 years old to sign up.");
             return;
         }
+        try {
+            await signUp(
+                UserRole[role as keyof typeof UserRole],
+                formData.email,
+                formData.username,
+                formData.password,
+                formData.dob,
+                formData.gender,
+                formData.phoneNumbers);
 
-        const id = await signUp(
-            UserRole[role as keyof typeof UserRole],
-            formData.email,
-            formData.username,
-            formData.password,
-            formData.dob,
-            formData.gender,
-            formData.phoneNumbers);
-
-        if (id) {
             redirect("/signin");
+        } catch (error) {
+            if (error instanceof Error && error.message === "EXIST") {
+                setError("Email already exists. Please use a different email.");
+            } else {
+                setError("An error occurred. Please try again.");
+            }
         }
-        alert("Signup failed");
     };
 
     return (
