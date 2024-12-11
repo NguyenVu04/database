@@ -4,6 +4,7 @@ import { include } from "@/db/schema/include.schema";
 import { places } from "@/db/schema/place.schema";
 import { contentType, posts } from "@/db/schema/post.schema";
 import { users } from "@/db/schema/user.schema";
+import { del } from "@vercel/blob";
 import { and, desc, eq } from "drizzle-orm";
 
 export type Post = {
@@ -18,7 +19,7 @@ export type Post = {
         place_name: string,
         place_address: string,
         star: number
-    }[], 
+    }[],
     comments: {
         id: string,
         content: string,
@@ -158,12 +159,37 @@ class PostDao {
     }
 
     async deleteById(id: string, visitorId: string): Promise<void> {
-        await db.delete(posts)
+        const deletedPost = await db.delete(posts)
             .where(and(eq(posts.id, id),
-                eq(posts.visitor, visitorId)));
+                eq(posts.visitor, visitorId)))
+            .returning();
+
+        if (deletedPost.length === 0) {
+            return;
+        }
+
+        const content = deletedPost[0].content as contentType;
+        if (content.mediaUrl) {
+            await del(content.mediaUrl);
+        };
     }
 
     async updateById(id: string, visitorId: string, data: contentType): Promise<void> {
+        const post = await db.select()
+            .from(posts)
+            .where(and(eq(posts.id, id),
+                eq(posts.visitor, visitorId)))
+            .limit(1);
+
+        if (post.length === 0) {
+            return;
+        }
+
+        const content = post[0].content as contentType;
+        if (content.mediaUrl) {
+            await del(content.mediaUrl);
+        }
+
         await db.update(posts)
             .set({
                 content: data
@@ -172,7 +198,36 @@ class PostDao {
                 eq(posts.visitor, visitorId)));
     }
 
-    
+    async createPostComment(
+        postId: string,
+        visitorId: string,
+        content: string,
+        senderId: string,
+    ): Promise<void> {
+        await db.insert(comments)
+            .values({
+                post: postId,
+                visitor: visitorId,
+                content: content,
+                sender: senderId
+            })
+    }
+
+    async findPostComments(postId: string, visitorId: string) {
+        return await db.select({
+            id: comments.id,
+            post: comments.post,
+            visitor: comments.visitor,
+            content: comments.content,
+            comment_date: comments.comment_date,
+            sender_name: users.name,
+            sender_id: users.id,
+        })
+            .from(comments)
+            .innerJoin(users, eq(users.id, comments.sender))
+            .where(and(eq(comments.post, postId),
+                eq(comments.visitor, visitorId)));
+    }
 }
 
 export const postDao = new PostDao();

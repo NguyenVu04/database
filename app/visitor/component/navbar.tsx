@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaGlobe, FaUserCircle } from "react-icons/fa";
 import CreatePostForm from "./CreatePostForm";
 
-const Navbar = () => {
+const Navbar = ({visitorId} : {visitorId?: string | null}) => {
     const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
 
     return (
@@ -19,7 +19,7 @@ const Navbar = () => {
                 <FaUserCircle size={30} /> {/* Profile Icon */}
             </div>
             {isPopupOpen && (
-                <CreatePostForm onClose={() => setIsPopupOpen(false)} />
+                <CreatePostForm onClose={() => setIsPopupOpen(false)} visitorId={visitorId} />
             )}
         </div>
     );

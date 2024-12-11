@@ -16,6 +16,9 @@ import { UserRole } from "@/lib/helper/userrole";
 import reportPost from "@/lib/helper/reportpost";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { redirect } from "next/navigation";
+import getPostComments from "@/lib/helper/getpostcomments";
+import createComment from "@/lib/helper/createComment";
 
 const HomePage = () => {
     const [session, setSession] = useState<Session | null>(null);
@@ -94,29 +97,36 @@ const HomePage = () => {
             })
         setMenuVisible(false); // Close the menu after action
     };
-    const handleAddComment = (postId: string) => {
-        console.log(`Add Comment to Post with ID: ${postId}`);
-        // const content = commentInputs[postId];
-        // if (!content) return;
+    const handleAddComment = async (postId: string, visitorId: string) => {
+        if (!session || !session.id || posts === null) {
+            redirect("/signin");
+        }
 
-        // const newComment = {
-        //     id: Date.now(),
-        //     user: {
-        //         name: "New User", // Replace with actual logged-in user's name
-        //         avatar: "/bg_login.jpg",
-        //     },
-        //     content,
-        // };
+        const content = commentInputs[postId];
+        if (!content) return;
 
-        // setPosts((prevPosts) =>
-        //     prevPosts.map((post) =>
-        //         post.id === postId
-        //             ? { ...post, comments: [...post.comments, newComment] }
-        //             : post
-        //     )
-        // );
+        await createComment(postId, visitorId, content, session.id);
 
-        // setCommentInputs((prev) => ({ ...prev, [postId]: "" }));
+        const updatedPosts = await Promise.all(
+            posts.map(async (post) => {
+                if (post.id === postId && post.visitor === visitorId) {
+                    return { ...post, comments: await getPostComments(postId, visitorId) };
+                }
+                return post;
+            })
+        );
+        setPosts(updatedPosts); // Update state with the resolved posts
+
+        setCommentInputs((prev) => ({ ...prev, [postId]: "" }));
+
+        toast.success('Comment added successfully', {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+        })
     };
 
     const handleInputChange = (postId: string, value: string) => {
@@ -239,13 +249,13 @@ const HomePage = () => {
                         <strong>Comments:</strong>
                         <div className="mt-2 space-y-4">
                             {post.comments.map((comment) => (
-                                <div key={comment.id} className="flex items-start space-x-3">
+                                <div key={comment.id} className="flex items-center space-x-3">
                                     <Image
                                         src={"/anonymous.png"}
                                         alt="avatar"
                                         className="rounded-full"
-                                        width={16}
-                                        height={16}
+                                        width={32}
+                                        height={32}
                                     />
                                     <div>
                                         <p className="font-medium">{comment.sender_name}</p>
@@ -268,7 +278,7 @@ const HomePage = () => {
                             />
                             <button
                                 type="button"
-                                onClick={() => handleAddComment(post.id)}
+                                onClick={() => handleAddComment(post.id, post.visitor)}
                                 className="bg-blue-500 text-white px-4 py-2 rounded"
                             >
                                 Post

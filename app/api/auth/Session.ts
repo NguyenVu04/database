@@ -7,7 +7,7 @@ import { options } from "./authoptions";
 import { UserRole } from "@/lib/helper/userrole";
 
 export type Session = {
-    id: string | number,
+    id: string, //TODO: FIX ADMIN LATER
     role: UserRole | "admin"
 }
 
@@ -33,7 +33,7 @@ export default async function loginIsRequired(
             }
 
             return {
-                id: admin.id,
+                id: admin.id.toString().padStart(5, "0"),
                 role: "admin"
             }
         }

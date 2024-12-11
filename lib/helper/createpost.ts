@@ -15,7 +15,7 @@ export default async function createPost(
         star: number
     }[]
 ) {
-    if (content.images) {
+    if (content.images && content.images.length > 0) {
         const imageUrls: string[] = [];
         for (const image of content.images) {
             const { url } = await put(image.name, image, { access: 'public' });
@@ -31,7 +31,7 @@ export default async function createPost(
                 places);
         } catch (error) {
             await del(imageUrls);
-            console.error(error);
+            throw error;
         }
     } else {
         return await postDao.create(
