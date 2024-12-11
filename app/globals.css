@@ -19,3 +19,18 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* React Slick Carousel Styles */
+.slick-prev:before,
+.slick-next:before {
+  color: black;
+}
+
+.slick-dots li button:before {
+  font-size: 12px;
+  color: gray;
+}
+
+.slick-dots li.slick-active button:before {
+  color: black;
+}

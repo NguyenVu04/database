@@ -30,7 +30,7 @@ export default function LoginPage({ params }: { params: Promise<{ role: string }
             return;
         }
 
-        redirect("/");
+        redirect(`/${role}`);
     };
     return (
         <div
