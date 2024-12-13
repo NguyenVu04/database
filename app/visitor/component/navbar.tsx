@@ -16,10 +16,10 @@ const Navbar = ({visitorId} : {visitorId?: string | null}) => {
                 <FaGlobe size={30} /> {/* Globe Icon */}
             </Link>
             <div className="flex items-center space-x-4">
-                <button type="button" className="bg-green-500 px-4 py-2 rounded text-white" onClick={() => setIsPopupOpen(true)}>
+                <button type="button" className="bg-green-500 px-4 py-2 rounded text-white hover:bg-green-600" onClick={() => setIsPopupOpen(true)}>
                     Create New Post
                 </button>
-                <FaUserCircle size={30} onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="cursor-pointer"/> {/* Profile Icon */}
+                <FaUserCircle size={30} onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="cursor-pointer hover:scale-125 transition duration-1000"/> {/* Profile Icon */}
             </div>
             {isPopupOpen && (
                 <CreatePostForm onClose={() => setIsPopupOpen(false)} visitorId={visitorId} />

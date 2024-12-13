@@ -1,6 +1,6 @@
 {
-  "id": "78b78d76-5141-4d43-baef-d8467671c501",
-  "prevId": "6fcf381e-b886-4db9-9cec-5e9a62800640",
+  "id": "e4d05459-633f-409e-a9cd-a3907c75c702",
+  "prevId": "960adfb1-7aa9-4cef-a8ba-89b6e16d1394",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -1118,15 +1118,7 @@
           ]
         }
       },
-      "uniqueConstraints": {
-        "phone_numbers_phone_number_unique": {
-          "name": "phone_numbers_phone_number_unique",
-          "columns": [
-            "phone_number"
-          ],
-          "nullsNotDistinct": false
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

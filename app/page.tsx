@@ -58,7 +58,7 @@ export default function App() {
       {/* Description */}
       <Container maxWidth="md" sx={{ textAlign: "center", padding: "50px 0" }}>
         <Typography variant="h3" gutterBottom>
-          Welcome to TourismWebsite
+          Welcome to TourismApp
         </Typography>
         <Typography variant="body1">
           Discover breathtaking destinations, plan your dream vacations, and

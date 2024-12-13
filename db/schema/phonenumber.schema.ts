@@ -4,7 +4,7 @@ import { createInsertSchema } from "drizzle-zod";
 
 export const phone_numbers = pgTable("phone_numbers", {
     user: uuid("user").notNull().references(() => users.id, {onDelete: "cascade"}),
-    phone_number: varchar("phone_number", {length: 10}).notNull().unique()
+    phone_number: varchar("phone_number", {length: 10}).notNull()
 }, (t) => [
     primaryKey({
         name: "phone_number_pkey",

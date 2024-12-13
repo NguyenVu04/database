@@ -134,8 +134,7 @@ CREATE TABLE IF NOT EXISTS "notes" (
 CREATE TABLE IF NOT EXISTS "phone_numbers" (
 	"user" uuid NOT NULL,
 	"phone_number" varchar(10) NOT NULL,
-	CONSTRAINT "phone_number_pkey" PRIMARY KEY("user","phone_number"),
-	CONSTRAINT "phone_numbers_phone_number_unique" UNIQUE("phone_number")
+	CONSTRAINT "phone_number_pkey" PRIMARY KEY("user","phone_number")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "places" (

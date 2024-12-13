@@ -6,6 +6,9 @@ import { UserRole } from "@/lib/helper/userrole";
 import { redirect } from "next/navigation";
 import React, { ChangeEvent, FormEvent, use, useState } from "react";
 import { FaHome } from "react-icons/fa";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { z } from 'zod';
 
 export default function SignupPage({ params }: { params: Promise<{ role: string }> }) {
     const resolvedParams = use(params);
@@ -23,8 +26,6 @@ export default function SignupPage({ params }: { params: Promise<{ role: string 
         gender: "",
         phoneNumbers: [""], // Start with one empty phone number field
     });
-
-    const [error, setError] = useState<string | null>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -48,10 +49,44 @@ export default function SignupPage({ params }: { params: Promise<{ role: string 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (calculateAge(formData.dob) < 18) {
-            setError("You must be at least 18 years old to sign up.");
+        if (!z.string().email().safeParse(formData.email).success) {
+            toast.error("Invalid email format.", {
+                position: "top-center",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
             return;
         }
+
+        if (calculateAge(formData.dob) < 18) {
+            toast.error("You must be at least 18 years old to sign up.", {
+                position: "top-center",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+            return;
+        }
+
+        if (formData.phoneNumbers.some(phone => phone.length !== 10)) {
+            toast.error("Phone numbers must be 10 digits long.", {
+                position: "top-center",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+            return;
+        }
+
+        setFormData({ ...formData, phoneNumbers: formData.phoneNumbers.filter((item, index) => formData.phoneNumbers.indexOf(item) !== index) });
+
         try {
             await signUp(
                 UserRole[role as keyof typeof UserRole],
@@ -65,18 +100,33 @@ export default function SignupPage({ params }: { params: Promise<{ role: string 
             redirect("/signin");
         } catch (error) {
             if (error instanceof Error && error.message === "EXIST") {
-                setError("Email already exists. Please use a different email.");
+                toast.error("Email already exists. Please use a different email.", {
+                    position: "top-center",
+                    autoClose: 4000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             } else {
-                setError("An error occurred. Please try again.");
+                toast.error("An error occurred. Please try again.", {
+                    position: "top-center",
+                    autoClose: 4000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
             }
         }
     };
 
     return (
         <div
-            className="flex items-center justify-center min-h-screen bg-cover bg-center bg-[url('/signup_bg.jpg')] bg-no-repeat"
+            className="flex items-center justify-center h-screen overflow-hidden bg-cover bg-center bg-[url('/signup_bg.jpg')] bg-no-repeat"
         >
-            <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-lg w-96">
+            <ToastContainer />
+            <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-lg w-96 overflow-y-scroll h-5/6 no-scrollbar">
                 {/* Logo Section */}
                 <div
                     className="flex items-center justify-center mb-6 cursor-pointer"
@@ -86,12 +136,6 @@ export default function SignupPage({ params }: { params: Promise<{ role: string 
                 </div>
 
                 {/* Form Section */}
-                <h2 className="text-2xl font-bold text-center mb-6">SIGN UP</h2>
-                {
-                    error && (
-                        <p className="text-red-500 mb-4">{error}</p>
-                    )
-                }
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Other fields */}
                     <div>

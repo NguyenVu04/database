@@ -154,7 +154,7 @@ export default function Home({ params }: { params: Promise<{ role: string }> }) 
             <FaGlobe size={32} onClick={() => redirect("/")} className='cursor-pointer' />
           </div>
           <div className="flex items-center space-x-4">
-            <FaUserCircle size={32} onClick={() => setIsDropdownOpen(!isDropdownOpen)} className='cursor-pointer' />
+            <FaUserCircle size={32} onClick={() => setIsDropdownOpen(!isDropdownOpen)} className='cursor-pointer hover:scale-125 transition duration-1000' />
           </div>
           {isDropdownOpen && (
             <div className="absolute top-12 right-12 bg-white text-black shadow-lg rounded-lg z-10 w-32">
