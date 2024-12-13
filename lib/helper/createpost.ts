@@ -10,7 +10,7 @@ export default async function createPost(
     },
     visitor: string,
     places: {
-        longtitude: number,
+        longitude: number,
         latitude: number,
         star: number
     }[]

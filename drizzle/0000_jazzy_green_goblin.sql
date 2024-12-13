@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS "added_in" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "admins" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" char(10) PRIMARY KEY NOT NULL,
 	"password" varchar NOT NULL
 );
 --> statement-breakpoint
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS "comments" (
 CREATE TABLE IF NOT EXISTS "configuration" (
 	"key" varchar PRIMARY KEY NOT NULL,
 	"value" varchar NOT NULL,
-	"admin_id" serial NOT NULL,
+	"admin_id" char(10),
 	"change_date" date DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
@@ -93,12 +93,12 @@ CREATE TABLE IF NOT EXISTS "hotel_rooms" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "include" (
-	"longtitude" numeric(4) NOT NULL,
-	"latitude" numeric(4) NOT NULL,
+	"longitude" double precision NOT NULL,
+	"latitude" double precision NOT NULL,
 	"post" uuid NOT NULL,
 	"visitor" uuid NOT NULL,
 	"star" smallint NOT NULL,
-	CONSTRAINT "include_pkey" PRIMARY KEY("longtitude","latitude","post","visitor")
+	CONSTRAINT "include_pkey" PRIMARY KEY("longitude","latitude","post","visitor")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "items" (
@@ -139,11 +139,11 @@ CREATE TABLE IF NOT EXISTS "phone_numbers" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "places" (
-	"longtitude" numeric(4) NOT NULL,
-	"latitude" numeric(4) NOT NULL,
+	"longitude" double precision NOT NULL,
+	"latitude" double precision NOT NULL,
 	"address" varchar NOT NULL,
 	"name" varchar NOT NULL,
-	CONSTRAINT "place_pkey" PRIMARY KEY("longtitude","latitude")
+	CONSTRAINT "place_pkey" PRIMARY KEY("longitude","latitude")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "posts" (
@@ -168,13 +168,13 @@ CREATE TABLE IF NOT EXISTS "restaurants" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "reviews" (
-	"longtitude" numeric(4) NOT NULL,
-	"latitude" numeric(4) NOT NULL,
+	"longitude" double precision NOT NULL,
+	"latitude" double precision NOT NULL,
 	"post_date" date DEFAULT now() NOT NULL,
 	"star" smallint NOT NULL,
 	"content" json NOT NULL,
 	"journalist" uuid NOT NULL,
-	CONSTRAINT "reviews_pkey" PRIMARY KEY("longtitude","latitude","post_date"),
+	CONSTRAINT "reviews_pkey" PRIMARY KEY("longitude","latitude","post_date"),
 	CONSTRAINT "star_check" CHECK ("reviews"."star" between 1 and 5)
 );
 --> statement-breakpoint
@@ -212,8 +212,8 @@ CREATE TABLE IF NOT EXISTS "shifts" (
 CREATE TABLE IF NOT EXISTS "through" (
 	"trip" uuid NOT NULL,
 	"visitor" uuid NOT NULL,
-	"longtitude" numeric(4) NOT NULL,
-	"latitude" numeric(4) NOT NULL,
+	"longitude" double precision NOT NULL,
+	"latitude" double precision NOT NULL,
 	"arrived_date" date NOT NULL,
 	"arrived_hour" smallint NOT NULL,
 	"departured_date" date NOT NULL,
@@ -260,18 +260,18 @@ CREATE TABLE IF NOT EXISTS "visitors" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "warn" (
-	"admin_id" serial NOT NULL,
+	"admin_id" char(10) NOT NULL,
 	"user" uuid NOT NULL,
 	"content" varchar(64) NOT NULL,
 	CONSTRAINT "warn_pkey" PRIMARY KEY("admin_id","user")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "work_at" (
-	"longtitude" numeric(4) NOT NULL,
-	"latitude" numeric(4) NOT NULL,
+	"longitude" double precision NOT NULL,
+	"latitude" double precision NOT NULL,
 	"tour_guide" uuid NOT NULL,
 	"start_date" date NOT NULL,
-	CONSTRAINT "work_at_pkey" PRIMARY KEY("longtitude","latitude","tour_guide"),
+	CONSTRAINT "work_at_pkey" PRIMARY KEY("longitude","latitude","tour_guide"),
 	CONSTRAINT "start_date_check" CHECK ("work_at"."start_date" <= now())
 );
 --> statement-breakpoint
@@ -366,7 +366,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "include" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."places"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "include" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longitude","latitude") REFERENCES "public"."places"("longitude","latitude") ON DELETE cascade ON UPDATE cascade;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -438,7 +438,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "reviews" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."places"("longtitude","latitude") ON DELETE cascade ON UPDATE cascade;
+ ALTER TABLE "reviews" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longitude","latitude") REFERENCES "public"."places"("longitude","latitude") ON DELETE cascade ON UPDATE cascade;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -474,7 +474,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "through" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."places"("longtitude","latitude") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "through" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longitude","latitude") REFERENCES "public"."places"("longitude","latitude") ON DELETE cascade ON UPDATE cascade;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -522,7 +522,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "work_at" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longtitude","latitude") REFERENCES "public"."places"("longtitude","latitude") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "work_at" ADD CONSTRAINT "place_fkey" FOREIGN KEY ("longitude","latitude") REFERENCES "public"."places"("longitude","latitude") ON DELETE cascade ON UPDATE cascade;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

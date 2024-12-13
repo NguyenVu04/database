@@ -185,7 +185,7 @@ INSERT INTO warn (admin_id, "user", content)
            ('ADMIN00004', (SELECT id FROM users WHERE email = 'zTt3w@example.com'), 'Your posts contains harmful information.');    
 
 --Places--
-INSERT INTO places (longitude, latitude, address, name)
+INSERT INTO places (longtitude, latitude, address, name)
 VALUES 
     (107.0734, 20.9505, 'Viet Nam', 'Ha Long Bay'),
     (108.4419, 11.9465, 'Viet Nam', 'Da Lat'),
@@ -208,13 +208,13 @@ VALUES
     (109.3425, 13.7753, 'Viet Nam', 'Quy Nhon'),
     (109.3445, 8.5875, 'Viet Nam', 'Phu Quoc Island');
 
-INSERT INTO reviews (longitude, latitude, post_date, star, content, journalist)
+INSERT INTO reviews (longtitude, latitude, post_date, star, content, journalist)
     VALUES (107.0734, 20.9505, '2022-01-01', 5, '{"content": "This is a review"}', (SELECT id FROM users WHERE email = 'zTt0w@example.com')),
            (108.4419, 11.9465, '2022-01-01', 4, '{"content": "This is a review"}', (SELECT id FROM users WHERE email = 'zTt4w@example.com')),
            (108.3350, 15.8794, '2022-01-01', 3, '{"content": "This is a review"}', (SELECT id FROM users WHERE email = 'zTt5w@example.com')),
            (106.2875, 17.4569, '2022-01-01', 2, '{"content": "This is a review"}', (SELECT id FROM users WHERE email = 'zTt6w@example.com'));
 
-INSERT INTO work_at (longitude, latitude, tour_guide, start_date)
+INSERT INTO work_at (longtitude, latitude, tour_guide, start_date)
     VALUES (107.0734, 20.9505, (SELECT id FROM tour_guide WHERE id = (SELECT id FROM users WHERE email = 'zTt7w@example.com')), '2022-01-01'),
            (108.4419, 11.9465, (SELECT id FROM tour_guide WHERE id = (SELECT id FROM users WHERE email = 'zTt8w@example.com')), '2022-01-01'),
            (108.4419, 11.9465, (SELECT id FROM tour_guide WHERE id = (SELECT id FROM users WHERE email = 'zTt9w@example.com')), '2022-01-01'),
@@ -229,7 +229,7 @@ INSERT INTO posts (visitor, post_date, content)
             ((SELECT id FROM users WHERE email = 'zTt18w@example.com'), '2022-01-01', '{"content": "Con Dao is a group of islands located off the southern coast of Vietnam, known for its pristine natural beauty, crystal-clear waters, and rich history. The archipelago is made up of 16 islands, with Con Son being the largest and most developed. The islands are famous for their stunning beaches, lush forests, and diverse marine life, making them a haven for eco-tourism and water activities like snorkeling, diving, and fishing. Con Dao is also historically significant for its role as a former prison island during the French colonial era and the Vietnam War, where political prisoners were held. Today, visitors can explore historical sites such as the Con Dao Prison and the Memorial to fallen heroes. The tranquil atmosphere, combined with its natural and historical attractions, makes Con Dao a perfect destination for those seeking both relaxation and cultural exploration.", "mediaUrl":["https://loollu56fcqxklcd.public.blob.vercel-storage.com/bg-login-TkHyoOoLSum3ulD7kmL6jtvwDGiORM.jpg", "https://loollu56fcqxklcd.public.blob.vercel-storage.com/bg-login-TkHyoOoLSum3ulD7kmL6jtvwDGiORM.jpg"]}'),
             ((SELECT id FROM users WHERE email = 'zTt19w@example.com'), '2022-01-01', '{"content": "Ba Vi is a stunning mountain range located in the northwest of Hanoi, Vietnam, known for its lush landscapes, cool climate, and scenic beauty. The area is home to the Ba Vi National Park, a popular destination for nature lovers and adventure enthusiasts. The park features dense forests, waterfalls, and a variety of flora and fauna, making it an ideal spot for hiking, picnicking, and exploring the great outdoors. One of the main attractions in Ba Vi is the Ba Vi Mountain, which offers panoramic views of the surrounding countryside. The region is also known for the historical Ba Vi Temple and the ruins of a French colonial church, adding a touch of history to its natural charm. With its peaceful atmosphere and proximity to Hanoi, Ba Vi is a perfect retreat for those looking to escape the hustle and bustle of the city.", "mediaUrl":["https://loollu56fcqxklcd.public.blob.vercel-storage.com/city-UTKJT00iIOMIgDDmfBng89VM3ChlKs.jpg", "https://loollu56fcqxklcd.public.blob.vercel-storage.com/bg-login-TkHyoOoLSum3ulD7kmL6jtvwDGiORM.jpg"]}');
 
-INSERT INTO include (longitude, latitude, post, visitor, star)
+INSERT INTO include (longtitude, latitude, post, visitor, star)
     VALUES (107.0734, 20.9505, (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt1w@example.com')), (SELECT id FROM users WHERE email = 'zTt1w@example.com'), 5),
            (108.4419, 11.9465, (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt2w@example.com')), (SELECT id FROM users WHERE email = 'zTt2w@example.com'), 4),
            (108.3350, 15.8794, (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt3w@example.com')), (SELECT id FROM users WHERE email = 'zTt3w@example.com'), 3),
@@ -238,10 +238,10 @@ INSERT INTO include (longitude, latitude, post, visitor, star)
            (107.0734, 20.9505, (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt19w@example.com')), (SELECT id FROM users WHERE email = 'zTt19w@example.com'), 5);
 
 INSERT INTO comments (visitor, post, content, sender, comment_date)
-    VALUES ((SELECT id FROM users WHERE email = 'zTt1w@example.com'), (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt1w@example.com')), 'This post captures Da Lats charm, emphasizing its cool climate, stunning landscapes.', (SELECT id FROM users WHERE email = 'zTt2w@example.com'), '2022-01-01'),
-           ((SELECT id FROM users WHERE email = 'zTt2w@example.com'), (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt2w@example.com')), 'The post paints Nha Trang as a coastal paradise with a variety of experiences.', (SELECT id FROM users WHERE email = 'zTt1w@example.com'), '2022-01-01'),
-           ((SELECT id FROM users WHERE  email = 'zTt3w@example.com'), (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt3w@example.com')), 'This description of Vung Tau highlights its appeal as a weekend getaway.', (SELECT id FROM users WHERE email = 'zTt1w@example.com'), '2022-01-01'),
-           ((SELECT id FROM users WHERE email = 'zTt17w@example.com'), (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt17w@example.com')), 'The paragraph about Hoi An conveys the towns historical significance.', (SELECT id FROM users WHERE email = 'zTt1w@example.com'), '2022-01-01');
+    VALUES ((SELECT id FROM users WHERE email = 'zTt1w@example.com'), (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt1w@example.com')), 'This post beautifully captures Da Lats charm, emphasizing its cool climate, stunning landscapes, and unique French colonial architecture.', (SELECT id FROM users WHERE email = 'zTt2w@example.com'), '2022-01-01'),
+           ((SELECT id FROM users WHERE email = 'zTt2w@example.com'), (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt2w@example.com')), 'The post succinctly paints Nha Trang as a lively, coastal paradise with a variety of experiences for travelers.', (SELECT id FROM users WHERE email = 'zTt1w@example.com'), '2022-01-01'),
+           ((SELECT id FROM users WHERE  email = 'zTt3w@example.com'), (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt3w@example.com')), 'This description of Vung Tau effectively highlights its proximity to Ho Chi Minh City and its appeal as a weekend getaway.', (SELECT id FROM users WHERE email = 'zTt1w@example.com'), '2022-01-01'),
+           ((SELECT id FROM users WHERE email = 'zTt17w@example.com'), (SELECT id FROM posts WHERE visitor = (SELECT id FROM users WHERE email = 'zTt17w@example.com')), 'The paragraph about Hoi An beautifully conveys the towns historical significance and unique charm.', (SELECT id FROM users WHERE email = 'zTt1w@example.com'), '2022-01-01');
 
 INSERT INTO hashtags (name)
     VALUES ('ILoveVungTau'),
@@ -356,7 +356,7 @@ INSERT INTO trips (visitor, start_date, end_date)
            ((SELECT id FROM users WHERE email = 'zTt3w@example.com'), '2022-01-01', '2022-01-02'),
            ((SELECT id FROM users WHERE email = 'zTt24w@example.com'), '2022-01-01', '2022-01-02');
 
-INSERT INTO through (trip, visitor, longitude, latitude, arrived_date, arrived_hour, departured_date, departured_hour)
+INSERT INTO through (trip, visitor, longtitude, latitude, arrived_date, arrived_hour, departured_date, departured_hour)
     VALUES ((SELECT id FROM trips WHERE visitor = (SELECT id FROM users WHERE email = 'zTt1w@example.com')), (SELECT id FROM users WHERE email = 'zTt1w@example.com'), 107.0734, 20.9505, '2022-01-01', '0', '2022-01-02', '1'),
            ((SELECT id FROM trips WHERE visitor = (SELECT id FROM users WHERE email = 'zTt2w@example.com')), (SELECT id FROM users WHERE email = 'zTt2w@example.com'), 108.4419, 11.9465, '2022-01-01', '0', '2022-01-02', '1'),
            ((SELECT id FROM trips WHERE visitor = (SELECT id FROM users WHERE email = 'zTt3w@example.com')), (SELECT id FROM users WHERE email = 'zTt3w@example.com'), 108.3350, 15.8794, '2022-01-01', '0', '2022-01-02', '1'),

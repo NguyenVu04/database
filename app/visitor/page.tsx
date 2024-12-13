@@ -163,8 +163,8 @@ const HomePage = () => {
                     currentPlaces={updatedPost.places
                         .map((place) => {
                             return {
-                                latitude: String(place.latitude),
-                                longtitude: String(place.longtitude),
+                                latitude: place.latitude,
+                                longitude: place.longitude,
                                 name: place.place_name,
                                 address: place.place_address
                             }
@@ -174,7 +174,7 @@ const HomePage = () => {
                     currentRatings={updatedPost.places
                         .map((place) => {
                             return {
-                                [`${place.latitude},${place.longtitude}`]: place.star
+                                [`${place.latitude},${place.longitude}`]: place.star
                             }
                         })
                         .reduce((acc, star) => {
@@ -246,7 +246,7 @@ const HomePage = () => {
                     </div>
 
                     {/* Post Content */}
-                    <p className="text-gray-700 mb-3">{post.content.content}</p>
+                    <p className="text-gray-700 mb-3 text-justify">{post.content.content}</p>
 
                     {/* Image Swiper */}
                     {
@@ -282,7 +282,7 @@ const HomePage = () => {
                         <ul className="list-disc ml-5 mt-2">
                             {post.places.map((place, idx) => (
                                 <li key={idx} className="mb-2">
-                                    <Link href={`https://www.google.com/maps/search/?api=1&query=${place.latitude}%2C${place.longtitude}`} target="_blank" className="hover:underline hover:text-blue-500">
+                                    <Link href={`https://www.google.com/maps/search/?api=1&query=${place.latitude}%2C${place.longitude}`} target="_blank" className="hover:underline hover:text-blue-500">
                                         <span className="font-medium">{`${place.place_name}, ${place.place_address}:`}</span>
                                     </Link>
                                     <StarRating rating={place.star} />

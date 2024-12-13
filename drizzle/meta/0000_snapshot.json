@@ -1,5 +1,5 @@
 {
-  "id": "b8762c15-44bb-445e-8ba9-9a8aed550eb7",
+  "id": "6fcf381e-b886-4db9-9cec-5e9a62800640",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -79,7 +79,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "char(10)",
           "primaryKey": true,
           "notNull": true
         },
@@ -431,9 +431,9 @@
         },
         "admin_id": {
           "name": "admin_id",
-          "type": "serial",
+          "type": "char(10)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "change_date": {
           "name": "change_date",
@@ -761,15 +761,15 @@
       "name": "include",
       "schema": "",
       "columns": {
-        "longtitude": {
-          "name": "longtitude",
-          "type": "numeric(4)",
+        "longitude": {
+          "name": "longitude",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
         "latitude": {
           "name": "latitude",
-          "type": "numeric(4)",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
@@ -799,15 +799,15 @@
           "tableFrom": "include",
           "tableTo": "places",
           "columnsFrom": [
-            "longtitude",
+            "longitude",
             "latitude"
           ],
           "columnsTo": [
-            "longtitude",
+            "longitude",
             "latitude"
           ],
           "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "cascade"
         },
         "post_fkey": {
           "name": "post_fkey",
@@ -829,7 +829,7 @@
         "include_pkey": {
           "name": "include_pkey",
           "columns": [
-            "longtitude",
+            "longitude",
             "latitude",
             "post",
             "visitor"
@@ -1135,15 +1135,15 @@
       "name": "places",
       "schema": "",
       "columns": {
-        "longtitude": {
-          "name": "longtitude",
-          "type": "numeric(4)",
+        "longitude": {
+          "name": "longitude",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
         "latitude": {
           "name": "latitude",
-          "type": "numeric(4)",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
@@ -1166,7 +1166,7 @@
         "place_pkey": {
           "name": "place_pkey",
           "columns": [
-            "longtitude",
+            "longitude",
             "latitude"
           ]
         }
@@ -1359,15 +1359,15 @@
       "name": "reviews",
       "schema": "",
       "columns": {
-        "longtitude": {
-          "name": "longtitude",
-          "type": "numeric(4)",
+        "longitude": {
+          "name": "longitude",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
         "latitude": {
           "name": "latitude",
-          "type": "numeric(4)",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
@@ -1417,11 +1417,11 @@
           "tableFrom": "reviews",
           "tableTo": "places",
           "columnsFrom": [
-            "longtitude",
+            "longitude",
             "latitude"
           ],
           "columnsTo": [
-            "longtitude",
+            "longitude",
             "latitude"
           ],
           "onDelete": "cascade",
@@ -1432,7 +1432,7 @@
         "reviews_pkey": {
           "name": "reviews_pkey",
           "columns": [
-            "longtitude",
+            "longitude",
             "latitude",
             "post_date"
           ]
@@ -1705,15 +1705,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "longtitude": {
-          "name": "longtitude",
-          "type": "numeric(4)",
+        "longitude": {
+          "name": "longitude",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
         "latitude": {
           "name": "latitude",
-          "type": "numeric(4)",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
@@ -1764,15 +1764,15 @@
           "tableFrom": "through",
           "tableTo": "places",
           "columnsFrom": [
-            "longtitude",
+            "longitude",
             "latitude"
           ],
           "columnsTo": [
-            "longtitude",
+            "longitude",
             "latitude"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -2070,7 +2070,7 @@
       "columns": {
         "admin_id": {
           "name": "admin_id",
-          "type": "serial",
+          "type": "char(10)",
           "primaryKey": false,
           "notNull": true
         },
@@ -2134,15 +2134,15 @@
       "name": "work_at",
       "schema": "",
       "columns": {
-        "longtitude": {
-          "name": "longtitude",
-          "type": "numeric(4)",
+        "longitude": {
+          "name": "longitude",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
         "latitude": {
           "name": "latitude",
-          "type": "numeric(4)",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
@@ -2179,22 +2179,22 @@
           "tableFrom": "work_at",
           "tableTo": "places",
           "columnsFrom": [
-            "longtitude",
+            "longitude",
             "latitude"
           ],
           "columnsTo": [
-            "longtitude",
+            "longitude",
             "latitude"
           ],
           "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {
         "work_at_pkey": {
           "name": "work_at_pkey",
           "columns": [
-            "longtitude",
+            "longitude",
             "latitude",
             "tour_guide"
           ]

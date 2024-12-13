@@ -42,7 +42,7 @@ export default function UpdatePostForm({
             (option) => option.value
         );
         const selectedPlaces = places.filter((place) =>
-            selectedOptions.includes(`${place.latitude},${place.longtitude}`)
+            selectedOptions.includes(`${place.latitude},${place.longitude}`)
         );
         setSelectedPlaces((prevSelected) => [
             ...prevSelected,
@@ -51,13 +51,13 @@ export default function UpdatePostForm({
                     !prevSelected.some(
                         (selectedPlace) =>
                             selectedPlace.latitude === place.latitude &&
-                            selectedPlace.longtitude === place.longtitude
+                            selectedPlace.longitude === place.longitude
                     )
             ),
         ]);
         setRatings((prev) =>
             selectedPlaces.reduce((acc, place) => {
-                if (!prev[`${place.latitude},${place.longtitude}`]) acc[`${place.latitude},${place.longtitude}`] = 0;
+                if (!prev[`${place.latitude},${place.longitude}`]) acc[`${place.latitude},${place.longitude}`] = 0;
                 return acc;
             }, prev)
         );
@@ -67,7 +67,7 @@ export default function UpdatePostForm({
     const handleRating = (place: Place, rating: number) => {
         setRatings((prev) => ({
             ...prev,
-            [`${place.latitude},${place.longtitude}`]: rating,
+            [`${place.latitude},${place.longitude}`]: rating,
         }));
     };
 
@@ -103,10 +103,10 @@ export default function UpdatePostForm({
     // Handle removal of voted place
     const handleRemovePlace = (place: Place) => {
         setSelectedPlaces((prevSelected) => prevSelected.filter(
-            (p) => p.latitude !== place.latitude || p.longtitude !== place.longtitude
+            (p) => p.latitude !== place.latitude || p.longitude !== place.longitude
         ));
         const newRatings = { ...ratings };
-        delete newRatings[`${place.latitude},${place.longtitude}`];
+        delete newRatings[`${place.latitude},${place.longitude}`];
         setRatings(newRatings);
     };
 
@@ -120,7 +120,7 @@ export default function UpdatePostForm({
                 !selectedPlaces.some(
                     (selectedPlace) =>
                         selectedPlace.latitude === place.latitude &&
-                        selectedPlace.longtitude === place.longtitude
+                        selectedPlace.longitude === place.longitude
                 )
         )
         : []; // No places to display when searchTerm is empty
@@ -142,9 +142,9 @@ export default function UpdatePostForm({
                     images: images,
                 },
                 selectedPlaces.map((place) => {
-                    const starRating = ratings[`${place.latitude},${place.longtitude}`];
+                    const starRating = ratings[`${place.latitude},${place.longitude}`];
                     return starRating ? {
-                        longtitude: Number(place.longtitude),
+                        longitude: Number(place.longitude),
                         latitude: Number(place.latitude),
                         star: starRating
                     } : null;
@@ -252,7 +252,7 @@ export default function UpdatePostForm({
                                 onChange={handlePlaceSelection}
                             >
                                 {filteredPlaces.map((place) => (
-                                    <option key={`${place.latitude},${place.longtitude}`} value={`${place.latitude},${place.longtitude}`}>
+                                    <option key={`${place.latitude},${place.longitude}`} value={`${place.latitude},${place.longitude}`}>
                                         {place.name} - {place.address}
                                     </option>
                                 ))}
@@ -265,7 +265,7 @@ export default function UpdatePostForm({
                             <h3 className="text-xl font-medium text-gray-900">Voted Places</h3>
                             <div className="max-h-60 overflow-y-auto mt-4">
                                 {selectedPlaces.map((place) => (
-                                    <div key={`${place.latitude},${place.longtitude}`} className="flex items-center mt-4">
+                                    <div key={`${place.latitude},${place.longitude}`} className="flex items-center mt-4">
                                         <span className="w-32 text-gray-900 text-lg">{place.name} - {place.address}</span>
                                         <div className="flex space-x-2">
                                             {[1, 2, 3, 4, 5].map((star) => (
@@ -275,7 +275,7 @@ export default function UpdatePostForm({
                                                     onClick={() => handleRating(place, star)}
                                                     className="text-yellow-500 text-xl"
                                                 >
-                                                    {ratings[`${place.latitude},${place.longtitude}`] >= star ? (
+                                                    {ratings[`${place.latitude},${place.longitude}`] >= star ? (
                                                         <AiFillStar />
                                                     ) : (
                                                         <AiOutlineStar />
@@ -284,7 +284,7 @@ export default function UpdatePostForm({
                                             ))}
                                         </div>
                                         <span className="ml-4 text-gray-600">
-                                            Rating: {ratings[`${place.latitude},${place.longtitude}`] ?? 0} / 5
+                                            Rating: {ratings[`${place.latitude},${place.longitude}`] ?? 0} / 5
                                         </span>
                                         <button
                                             title="remove"

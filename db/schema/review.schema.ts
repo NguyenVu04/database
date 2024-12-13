@@ -1,4 +1,4 @@
-import { check, date, foreignKey, json, numeric, pgTable, primaryKey, smallint, uuid } from "drizzle-orm/pg-core";
+import { check, date, doublePrecision, foreignKey, json, pgTable, primaryKey, smallint, uuid } from "drizzle-orm/pg-core";
 import { places } from "./place.schema";
 import { journalists } from "./journalist.schema";
 import { z } from "zod";
@@ -10,8 +10,8 @@ export type Review = {
 }
 
 export const reviews = pgTable("reviews", {
-    longtitude: numeric("longtitude", { precision: 4 }).notNull(),
-    latitude: numeric("latitude", { precision: 4 }).notNull(),
+    longitude: doublePrecision("longitude").notNull(),
+    latitude: doublePrecision("latitude").notNull(),
     post_date: date("post_date", {mode: "date"}).notNull().defaultNow(),
     star: smallint().notNull(),    
     content: json("content").notNull(),
@@ -19,12 +19,12 @@ export const reviews = pgTable("reviews", {
 }, (t) => [
     primaryKey({
         name: "reviews_pkey",
-        columns: [t.longtitude, t.latitude, t.post_date],
+        columns: [t.longitude, t.latitude, t.post_date],
     }),
     foreignKey({
         name: "place_fkey",
-        columns: [t.longtitude, t.latitude],
-        foreignColumns: [places.longtitude, places.latitude],
+        columns: [t.longitude, t.latitude],
+        foreignColumns: [places.longitude, places.latitude],
     })
     .onDelete("cascade")
     .onUpdate("cascade"),

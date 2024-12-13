@@ -1,9 +1,9 @@
 import { InferSelectModel } from "drizzle-orm";
-import { pgTable, serial, varchar } from "drizzle-orm/pg-core";
+import { char, pgTable, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 
 export const admins = pgTable("admins", {
-    id: serial("id").primaryKey(),
+    id: char("id", {length: 10}).primaryKey(),
     password: varchar("password").notNull(),
 });
 

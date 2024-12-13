@@ -14,8 +14,8 @@ export type Post = {
     post_date: Date;
     username: string;
     places: {
-        longtitude: string,
-        latitude: string,
+        longitude: number,
+        latitude: number,
         place_name: string,
         place_address: string,
         star: number
@@ -53,7 +53,7 @@ class PostDao {
 
         const result = userPosts.map(async (post) => {
             const placeList = await db.select({
-                longtitude: include.longtitude,
+                longitude: include.longitude,
                 latitude: include.latitude,
                 star: include.star,
                 place_name: places.name,
@@ -62,7 +62,7 @@ class PostDao {
                 .from(include)
                 .innerJoin(places,
                     and(
-                        eq(places.longtitude, include.longtitude),
+                        eq(places.longitude, include.longitude),
                         eq(places.latitude, include.latitude)
                     ))
                 .where(eq(include.post, post.id));
@@ -94,7 +94,7 @@ class PostDao {
         visitor: string;
         content: contentType;
         post_date: Date;
-        places: { longtitude: string, latitude: string, star: number }[]
+        places: { longitude: number, latitude: number, star: number }[]
     }[]> {
         const user = db.select({
             id: users.id,
@@ -112,7 +112,7 @@ class PostDao {
 
         const result = userPosts.map(async (post) => {
             const places = await db.select({
-                longtitude: include.longtitude,
+                longitude: include.longitude,
                 latitude: include.latitude,
                 star: include.star
             })
@@ -132,7 +132,7 @@ class PostDao {
     async create(
         visitor: string,
         content: contentType,
-        places: { longtitude: number, latitude: number, star: number }[]): Promise<string | null> {
+        places: { longitude: number, latitude: number, star: number }[]): Promise<string | null> {
 
         const newPost = await db.insert(posts)
             .values({
@@ -148,8 +148,8 @@ class PostDao {
         places.forEach(async (place) => {
             await db.insert(include)
                 .values({
-                    longtitude: place.longtitude.toString(),
-                    latitude: place.latitude.toString(),
+                    longitude: place.longitude,
+                    latitude: place.latitude,
                     post: newPost[0].id,
                     visitor: visitor,
                     star: place.star
@@ -182,7 +182,7 @@ class PostDao {
             images?: string[];
         },
         places: {
-            longtitude: number;
+            longitude: number;
             latitude: number;
             star: number;
         }[]
@@ -236,23 +236,23 @@ class PostDao {
             );
 
         const newPlaces = places.map((place) => ({
-            longtitude: place.longtitude,
+            longitude: place.longitude,
             latitude: place.latitude,
             post: postId,
             visitor: visitorId,
             star: place.star
         }));
 
-        const addedPlaces = newPlaces.filter((place) => !currentPlaces.some((p) => Number(p.longtitude) === place.longtitude && Number(p.latitude) === place.latitude));
-        const deletedPlaces = currentPlaces.filter((place) => !newPlaces.some((p) => p.longtitude === Number(place.longtitude) && p.latitude === Number(place.latitude)));
-        const updatedPlaces = newPlaces.filter((place) => currentPlaces.some((p) => Number(p.longtitude) === place.longtitude && Number(p.latitude) === place.latitude));
+        const addedPlaces = newPlaces.filter((place) => !currentPlaces.some((p) => Number(p.longitude) === place.longitude && Number(p.latitude) === place.latitude));
+        const deletedPlaces = currentPlaces.filter((place) => !newPlaces.some((p) => p.longitude === Number(place.longitude) && p.latitude === Number(place.latitude)));
+        const updatedPlaces = newPlaces.filter((place) => currentPlaces.some((p) => Number(p.longitude) === place.longitude && Number(p.latitude) === place.latitude));
 
         if (addedPlaces.length > 0) {
             addedPlaces.forEach(async (place) => {
                 await db.insert(include)
                     .values({
-                        longtitude: place.longtitude.toString(),
-                        latitude: place.latitude.toString(),
+                        longitude: place.longitude,
+                        latitude: place.latitude,
                         post: place.post,
                         visitor: place.visitor,
                         star: place.star
@@ -266,7 +266,7 @@ class PostDao {
                         and(
                             eq(include.post, place.post),
                             eq(include.visitor, place.visitor),
-                            eq(include.longtitude, place.longtitude),
+                            eq(include.longitude, place.longitude),
                             eq(include.latitude, place.latitude)
                         )
                     );
@@ -283,8 +283,8 @@ class PostDao {
                         and(
                             eq(include.post, place.post),
                             eq(include.visitor, place.visitor),
-                            eq(include.longtitude, place.longtitude.toString()),
-                            eq(include.latitude, place.latitude.toString())
+                            eq(include.longitude, place.longitude),
+                            eq(include.latitude, place.latitude)
                         )
                     );
             })

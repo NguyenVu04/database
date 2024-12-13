@@ -1,4 +1,4 @@
-import { check, date, foreignKey, numeric, pgTable, smallint, uuid } from "drizzle-orm/pg-core";
+import { check, date, doublePrecision, foreignKey, pgTable, smallint, uuid } from "drizzle-orm/pg-core";
 import { trips } from "./trip.schema";
 import { places } from "./place.schema";
 import { sql } from "drizzle-orm";
@@ -8,8 +8,8 @@ import { z } from "zod";
 export const through = pgTable("through", {
     trip: uuid("trip").notNull(),
     visitor: uuid("visitor").notNull(),
-    longtitude: numeric("longtitude", {precision: 4}).notNull(),
-    latitude: numeric("latitude", {precision: 4}).notNull(),
+    longitude: doublePrecision("longitude").notNull(),
+    latitude: doublePrecision("latitude").notNull(),
     arrived_date: date("arrived_date", {mode: "date"}).notNull(),
     arrived_hour: smallint("arrived_hour").notNull(),
     departured_date: date("departured_date", {mode: "date"}).notNull(),
@@ -23,9 +23,11 @@ export const through = pgTable("through", {
     .onDelete("cascade"),
     foreignKey({
         name: "place_fkey",
-        columns: [t.longtitude, t.latitude],
-        foreignColumns: [places.longtitude, places.latitude],
-    }),
+        columns: [t.longitude, t.latitude],
+        foreignColumns: [places.longitude, places.latitude],
+    })
+    .onDelete("cascade")
+    .onUpdate("cascade"),
     check("date_check", sql`${t.arrived_date} <= ${t.departured_date}`),
     check("hour_check", sql`${t.arrived_hour} <= ${t.departured_hour}`),
     check("valid_arrived_hour_check", sql`${t.arrived_hour} between 0 and 23`),

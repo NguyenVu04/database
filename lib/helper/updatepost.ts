@@ -15,7 +15,7 @@ export default async function updatePost(
         images?: File[];
     },
     places: {
-        longtitude: number;
+        longitude: number;
         latitude: number;
         star: number;
     }[]
