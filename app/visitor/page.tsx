@@ -70,7 +70,7 @@ const HomePage = () => {
                     });
             })
             .catch((err) => {
-                alert(err);
+                toast.error(err);
             })
     };
 

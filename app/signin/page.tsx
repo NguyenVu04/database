@@ -82,7 +82,7 @@ export default async function LoginPage() {
               Login as Service Provider
             </button>
           </Link>
-          <Link href="/signin/admin">
+          <Link href="/admin/signin">
             <button
               type="button"
               className="flex items-center justify-center w-full py-2 px-4 text-white bg-red-500 rounded-lg hover:bg-red-600"

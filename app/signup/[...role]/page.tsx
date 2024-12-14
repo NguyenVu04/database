@@ -73,7 +73,7 @@ export default function SignupPage({ params }: { params: Promise<{ role: string 
             return;
         }
 
-        if (formData.phoneNumbers.some(phone => phone.length !== 10)) {
+        if (formData.phoneNumbers.some(phone => phone.length !== 10 && phone.length !== 0)) {
             toast.error("Phone numbers must be 10 digits long.", {
                 position: "top-center",
                 autoClose: 4000,
@@ -85,7 +85,7 @@ export default function SignupPage({ params }: { params: Promise<{ role: string 
             return;
         }
 
-        setFormData({ ...formData, phoneNumbers: formData.phoneNumbers.filter((item, index) => formData.phoneNumbers.indexOf(item) !== index) });
+        setFormData({ ...formData, phoneNumbers: formData.phoneNumbers.filter((item, index) => (formData.phoneNumbers.indexOf(item) !== index) || item.length !== 0) });
 
         try {
             await signUp(
@@ -93,11 +93,11 @@ export default function SignupPage({ params }: { params: Promise<{ role: string 
                 formData.email,
                 formData.username,
                 formData.password,
-                formData.dob,
+                formData.dob,   
                 formData.gender,
                 formData.phoneNumbers);
 
-            redirect("/signin");
+            return;
         } catch (error) {
             if (error instanceof Error && error.message === "EXIST") {
                 toast.error("Email already exists. Please use a different email.", {
@@ -117,8 +117,10 @@ export default function SignupPage({ params }: { params: Promise<{ role: string 
                     pauseOnHover: true,
                     draggable: true,
                 });
+                console.error(error);
             }
         }
+        redirect("/signin");
     };
 
     return (

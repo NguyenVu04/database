@@ -4,6 +4,7 @@ import { include } from "@/db/schema/include.schema";
 import { places } from "@/db/schema/place.schema";
 import { contentType, posts } from "@/db/schema/post.schema";
 import { reports } from "@/db/schema/report.schema";
+import { users } from "@/db/schema/user.schema";
 import { and, count, desc, eq, sql } from "drizzle-orm";
 
 export type PostReport = {
@@ -14,10 +15,11 @@ export type PostReport = {
         place_name: string;
         place_address: string;
     }[];
-    post: string;
-    visitor: string;
-    count: number;
-    content: contentType;
+    postContent: contentType;
+    postId: string;
+    visitorId: string;
+    countReports: number;
+    userName: string;
 };
 
 class AdminDao {
@@ -55,15 +57,15 @@ class AdminDao {
     async create(data: Omit<Admin, "id">): Promise<string> {
         const adminList = await this.findAllAdmins();
 
-        const id = process.env.ADMIN_PREFIX ?? "" +
+        const id = (process.env.ADMIN_PREFIX ?? "") +
             (adminList.map(
                 (admin) => Number(
                     admin.id
                         .replace(
                             process.env.ADMIN_PREFIX ?? "", "")))
                 .reduce(
-                    (a, b) => Math.max(a, b), 0) + 1).toString().padStart(5, "0");
-
+                    (a, b) => Math.max(a, b), 0) + 1).toFixed(0).padStart(5, "0");
+        
         await db.insert(admins)
             .values({ ...data, id });
 
@@ -93,13 +95,13 @@ class AdminDao {
         const countReports = db.select({
             post: reports.post,
             visitor: reports.visitor,
-            count: count()
+            count: count().as("count"),
         })
             .from(reports)
             .groupBy(reports.post, reports.visitor)
             .as("count_reports");
 
-        const reportedPosts = await db.select({
+        const reportedPosts = db.select({
             post: countReports.post,
             visitor: countReports.visitor,
             count: countReports.count,
@@ -107,10 +109,23 @@ class AdminDao {
         })
             .from(countReports)
             .innerJoin(posts, and(eq(countReports.post, posts.id), eq(countReports.visitor, posts.visitor)))
-            .orderBy(desc(countReports.count));
+            .orderBy(desc(countReports.count))
+            .as("reported_posts");
+
+        const userReportedPosts = await db.select({
+            postId: reportedPosts.post,
+            visitorId: reportedPosts.visitor,
+            countReports: reportedPosts.count,
+            postContent: reportedPosts.content,
+            userName: users.name,
+        }).from(reportedPosts)
+            .innerJoin(users,
+                eq(reportedPosts.visitor, users.id)
+            );
+
 
         const result = await Promise.all(
-            reportedPosts.map(async (post) => {
+            userReportedPosts.map(async (post) => {
                 const placeList = await db.select({
                     longitude: include.longitude,
                     latitude: include.latitude,
@@ -127,16 +142,34 @@ class AdminDao {
                                 places.latitude)))
                     .where(
                         and(
-                            eq(include.post, 
-                                post.post),
-                            eq(include.visitor, 
-                                post.visitor)));
+                            eq(include.post,
+                                post.postId),
+                            eq(include.visitor,
+                                post.visitorId)));
 
-                return { ...post, places: placeList, content: post.content as contentType };
+                return {
+                    places: placeList,
+                    postId: post.postId,
+                    visitorId: post.visitorId,
+                    countReports: post.countReports,
+                    userName: post.userName,
+                    postContent: post.postContent as contentType,
+                    reportCount: post.countReports,
+                };
             })
         );
 
         return result;
+    }
+
+    async deletePostReports(postId: string, visitorId: string): Promise<void> {
+        await db.delete(reports)
+            .where(
+                and(
+                    eq(reports.post, postId),
+                    eq(reports.visitor, visitorId)
+                )
+            );
     }
 }
 

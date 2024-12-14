@@ -58,19 +58,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION find_reported_posts()
-RETURNS TABLE (
-    post_id UUID, 
-    visitor_id UUID, 
-    report_count INTEGER, 
-    content JSON,
-    visitor_name VARCHAR) 
-AS $$
-BEGIN
-
-END;
-$$ LANGUAGE plpgsql;
-
 --Admins--
 INSERT INTO admins (id, password)
     VALUES ('ADMIN00001', 'admin'),

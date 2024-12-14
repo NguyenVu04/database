@@ -419,7 +419,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "reports" ADD CONSTRAINT "post_fkey" FOREIGN KEY ("post","visitor") REFERENCES "public"."posts"("id","visitor") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "reports" ADD CONSTRAINT "post_fkey" FOREIGN KEY ("post","visitor") REFERENCES "public"."posts"("id","visitor") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

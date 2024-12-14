@@ -18,6 +18,7 @@ export const reports = pgTable("reports", {
         foreignColumns: [posts.id, posts.visitor],
         columns: [t.post, t.visitor],
     })
+    .onDelete("cascade"),
 ]);
 
 export type Report = InferSelectModel<typeof reports>;

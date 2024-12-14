@@ -15,8 +15,8 @@ class PlaceDao {
         return await db.select()
             .from(places)
             .where(and(
-                eq(places.longtitude, longtitude.toFixed(4)),
-                eq(places.latitude, latitude.toFixed(4))
+                eq(places.longitude, longtitude),
+                eq(places.latitude, latitude)
             ))
             .limit(1);
     }
@@ -24,8 +24,8 @@ class PlaceDao {
     async deleteByLongtitudeAndLatitude(longtitude: number, latitude: number): Promise<Place[]> {
         return await db.delete(places)
             .where(and(
-                eq(places.longtitude, longtitude.toFixed(4)),
-                eq(places.latitude, latitude.toFixed(4))
+                eq(places.longitude, longtitude),
+                eq(places.latitude, latitude)
             ))
             .returning();
     }
@@ -37,8 +37,8 @@ class PlaceDao {
         return await db.update(places)
             .set(data)
             .where(and(
-                eq(places.longtitude, longtitude.toFixed(4)),
-                eq(places.latitude, latitude.toFixed(4))
+                eq(places.longitude, longtitude),
+                eq(places.latitude, latitude)
             ))
             .returning();
     }
