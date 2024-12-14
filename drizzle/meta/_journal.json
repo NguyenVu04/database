@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1734147712495,
-      "tag": "0000_living_revanche",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1734147730747,
-      "tag": "0001_data_seed",
+      "when": 1734167909569,
+      "tag": "0000_flashy_sprite",
       "breakpoints": true
     }
   ]
