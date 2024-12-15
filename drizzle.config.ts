@@ -11,6 +11,6 @@ export default defineConfig({
         user: process.env.DATABASE_USER as string,
         password: process.env.DATABASE_PASS as string,
         database: process.env.DATABASE_NAME as string,
-        ssl: true
+        ssl: false
     }
 });

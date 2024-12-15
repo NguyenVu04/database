@@ -41,5 +41,5 @@ next-env.d.ts
 
 .vscode
 
-error.log
+db.error.log
 .vercel
