@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Travel Social Media
+
+This project is a social media platform for travelers, built using Next.js, PostgreSQL, and NextAuth for authentication. It allows users to share their travel experiences, connect with other travelers, and discover new destinations.
+
+## Features
+
+- **User Profiles**: Create and customize your profile to showcase your travel history and interests.
+- **Posts and Comments**: Share your travel stories, photos, and videos. Engage with other users through comments.
+- **Explore Destinations**: Discover new travel destinations based on user posts and recommendations.
+- **Follow and Connect**: Follow other travelers to stay updated with their adventures.
+- **Secure Authentication**: User authentication powered by NextAuth.
+
+## Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org/) (used for both frontend and backend)
+- **Database**: PostgreSQL
+- **ORM**: [Drizzle](https://orm.drizzle.team/)
+- **Authentication**: [NextAuth](https://next-auth.js.org/)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Node.js](https://nodejs.org/en/) (>= 14.x)
+- [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)
+- [PostgreSQL](https://www.postgresql.org/) (>= 12.x)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/NguyenVu04/travel-social-media.git
+   cd travel-social-media
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-## Learn More
+3. Set up environment variables:
+   Create a `.env` file in the root directory and add the following variables:
+   ```
+   DATABASE_URL=postgresql://username:password@localhost:5432/database_name
+   NEXTAUTH_URL=http://localhost:3000
+   NEXTAUTH_SECRET=your_nextauth_secret
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. Run database migrations:
+   ```bash
+   npx drizzle-kit generate
+   npx drizzle-kit up
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Running the Application
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Start the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-## Deploy on Vercel
+2. Open your browser and navigate to `http://localhost:3000`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The application is deployed to Vercel. You can access it at [database-sigma.vercel.app](https://database-sigma.vercel.app/).
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Contact
+
+For any inquiries or support, please reach out to [NguyenVu04](https://github.com/NguyenVu04).
